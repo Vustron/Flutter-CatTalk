@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'services/firebase_options.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
@@ -9,12 +10,18 @@ import 'screens/home_screen.dart';
 //global object for accessing device screen size
 late Size mq;
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const App());
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    runApp(const App());
+  });
 }
 
 class App extends StatelessWidget {
@@ -34,7 +41,7 @@ class App extends StatelessWidget {
           ),
           titleTextStyle: TextStyle(
             color: Colors.white,
-            fontSize: 19.0,
+            fontSize: 25.0,
             fontWeight: FontWeight.bold,
           ),
           color: Color.fromARGB(255, 68, 255, 196),
