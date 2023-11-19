@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "545427152437",
+    "project_id": "flutter-wechat-app",
+    "storage_bucket": "flutter-wechat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545427152437:android:c94d53c4303a6f4dea5b7c",
+        "android_client_info": {
+          "package_name": "com.example.wechat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXVY6Jg4_CXIV1PBE6dxUatXUSc6ZcB_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
