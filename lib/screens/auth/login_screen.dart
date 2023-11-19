@@ -1,6 +1,9 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
+import 'package:wechat/utils/dialog.dart';
+import '../../controller/googleAuth.dart';
 import '../home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,12 +50,22 @@ class _LoginScreenState extends State<LoginScreen> {
           height: mq.height * 0.09,
           child: Center(
             child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const HomeScreen(),
-                    ));
+              onPressed: () async {
+                Dialogs.showProgressBar(context);
+                try {
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  await provider.googleLogin();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const HomeScreen(),
+                      ));
+                } catch (error) {
+                  print('Error during Google login: $error');
+                  Dialogs.showSnackBar(
+                      context, 'Something went wrong (Check Internet)');
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 68, 255, 196),
