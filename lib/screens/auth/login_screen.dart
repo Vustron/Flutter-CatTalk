@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element
 import 'package:flutter/material.dart';
 import 'package:wechat/main.dart';
+import '../home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +11,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isAnimate = false;
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        _isAnimate = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -20,18 +32,28 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text("Welcome to We Chat"),
       ),
       body: Stack(children: [
-        Positioned(
+        // App Logo
+        AnimatedPositioned(
             top: mq.height * .15,
-            left: mq.width * .25,
+            right: _isAnimate ? mq.width * .25 : -mq.width * .5,
             width: mq.width * .5,
+            duration: const Duration(seconds: 1),
             child: Image.asset('assets/images/icon.png')),
+
+        // google login
         Positioned(
           bottom: mq.height * 0.2,
           left: mq.width * 0.17,
           height: mq.height * 0.09,
           child: Center(
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const HomeScreen(),
+                    ));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 68, 255, 196),
                 shape: const StadiumBorder(),
@@ -49,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 19,
                   ),
                   children: [
-                    TextSpan(text: 'Sign in with '),
+                    TextSpan(text: 'Login with '),
                     TextSpan(
                       text: 'Google',
                       style: TextStyle(
