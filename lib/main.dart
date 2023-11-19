@@ -1,9 +1,13 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import
 
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
-import 'package:flutter/material.dart';
-import 'screens/homescreen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/home_screen.dart';
+
+//global object for accessing device screen size
+late Size mq;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +18,7 @@ Future<void> main() async {
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +37,10 @@ class App extends StatelessWidget {
             fontSize: 19.0,
             fontWeight: FontWeight.bold,
           ),
-          backgroundColor: Colors.purple,
+          color: Color.fromARGB(255, 68, 255, 196),
         ),
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }
