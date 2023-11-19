@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Home Screen
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -35,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.add_comment_rounded,
             color: Colors.white, // Set the color to white
           ),
-          backgroundColor: Colors.purple, // Set the background color if needed
+          backgroundColor: const Color.fromARGB(
+              255, 68, 255, 196), // Set the background color if needed
         ),
       ),
     );
