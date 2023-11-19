@@ -33,23 +33,23 @@ dependencies:
   country_code_picker: ^3.0.0
   url_launcher: ^6.2.1
   google_fonts: ^6.1.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.5
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^3.0.1
 
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/icon.png"
+  min_sdk_android: 21
+
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/icon.png
-
-flutter_launcher_icons:
-  android: "launcher_icon"
-  min_sdk_android: 21
-  image_path: "assets/images/icon.png"
+  image: "assets/images/icon.png"
 
 flutter:
   uses-material-design: true
