@@ -37,17 +37,18 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(children: [
         // App Logo
         AnimatedPositioned(
-            top: mq.height * .15,
-            right: _isAnimate ? mq.width * .25 : -mq.width * .5,
+            top: _isAnimate ? mq.height * .15 : -mq.width * .5,
+            right: mq.width * .25,
             width: mq.width * .5,
             duration: const Duration(seconds: 1),
             child: Image.asset('assets/images/icon.png')),
 
         // google login
-        Positioned(
-          bottom: mq.height * 0.2,
+        AnimatedPositioned(
+          bottom: _isAnimate ? mq.height * 0.2 : -mq.width * .5,
           left: mq.width * 0.17,
-          height: mq.height * 0.09,
+          height: mq.height * 0.2,
+          duration: const Duration(seconds: 1),
           child: Center(
             child: ElevatedButton.icon(
               onPressed: () async {

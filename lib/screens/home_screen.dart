@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:wechat/utils/chatUserCard.dart';
+import '../main.dart';
 import '../controller/googleAuth.dart';
 import 'auth/login_screen.dart';
 
@@ -44,89 +45,95 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 10.0),
-            CircleAvatar(
-              backgroundImage: user != null
-                  ? (photoUrl.startsWith('http') ||
-                          photoUrl.startsWith('https'))
-                      ? NetworkImage(photoUrl)
-                      : AssetImage(photoUrl) as ImageProvider<Object>?
-                  : AssetImage(photoUrl),
-              radius: 50.0,
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              name,
-              style: const TextStyle(
-                color: Colors.amberAccent,
-                letterSpacing: 1.0,
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              email,
-              style: const TextStyle(
-                color: Colors.amberAccent,
-                letterSpacing: 1.0,
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              width: 121,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    final provider = Provider.of<GoogleSignInProvider>(context,
-                        listen: false);
-                    provider.googleLogout();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ));
-                  } catch (error) {
-                    print('Error during Google login: $error');
-                  }
-                }, // Missing closing parenthesis here
-                icon: const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Colors.red,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      // body: Center(
+      //   child: Column(
+      //     children: [
+      //       const SizedBox(height: 10.0),
+      //       CircleAvatar(
+      //         backgroundImage: user != null
+      //             ? (photoUrl.startsWith('http') ||
+      //                     photoUrl.startsWith('https'))
+      //                 ? NetworkImage(photoUrl)
+      //                 : AssetImage(photoUrl) as ImageProvider<Object>?
+      //             : AssetImage(photoUrl),
+      //         radius: 50.0,
+      //       ),
+      //       const SizedBox(height: 10.0),
+      //       Text(
+      //         name,
+      //         style: const TextStyle(
+      //           color: Colors.amberAccent,
+      //           letterSpacing: 1.0,
+      //           fontSize: 12.0,
+      //           fontWeight: FontWeight.bold,
+      //         ),
+      //       ),
+      //       const SizedBox(height: 10.0),
+      //       Text(
+      //         email,
+      //         style: const TextStyle(
+      //           color: Colors.amberAccent,
+      //           letterSpacing: 1.0,
+      //           fontSize: 12.0,
+      //           fontWeight: FontWeight.bold,
+      //         ),
+      //       ),
+      //       SizedBox(
+      //         width: 121,
+      //         child: ElevatedButton.icon(
+      //           onPressed: () async {
+      //             try {
+      //               final provider = Provider.of<GoogleSignInProvider>(context,
+      //                   listen: false);
+      //               provider.googleLogout();
+      //               Navigator.pushReplacement(
+      //                   context,
+      //                   MaterialPageRoute(
+      //                     builder: (_) => const LoginScreen(),
+      //                   ));
+      //             } catch (error) {
+      //               print('Error during Google login: $error');
+      //             }
+      //           }, // Missing closing parenthesis here
+      //           icon: const Icon(
+      //             Icons.logout,
+      //             color: Colors.white,
+      //           ),
+      //           label: const Text(
+      //             'Logout',
+      //             style: TextStyle(
+      //               fontSize: 10,
+      //               color: Colors.white,
+      //             ),
+      //           ),
+      //           style: ButtonStyle(
+      //             backgroundColor: MaterialStateProperty.all(
+      //               Colors.red,
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
           onPressed: () {},
           child: const Icon(
             Icons.add_comment_rounded,
-            color: Colors.white, // Set the color to white
+            color: Colors.white,
           ),
-          backgroundColor: const Color.fromARGB(
-              255, 68, 255, 196), // Set the background color if needed
+          backgroundColor: const Color.fromARGB(255, 68, 255, 196),
         ),
       ),
+      body: ListView.builder(
+          itemCount: 16,
+          padding: const EdgeInsets.only(top: 2),
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            return const ChatUserCard();
+          }),
     );
   }
 }
