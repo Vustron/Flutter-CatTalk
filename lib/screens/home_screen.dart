@@ -1,4 +1,6 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:wechat/utils/chatUserCard.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
+import '../utils/API.dart';
 import 'auth/login_screen.dart';
 
 // Home Screen
@@ -127,13 +130,33 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: const Color.fromARGB(255, 68, 255, 196),
         ),
       ),
-      body: ListView.builder(
-          itemCount: 16,
-          padding: const EdgeInsets.only(top: 2),
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            return const ChatUserCard();
-          }),
+      body: StreamBuilder(
+        stream: API.firestore.collection('users').snapshots(),
+        builder: (context, snapshot) {
+          final list = [];
+
+          if (snapshot.hasData) {
+            final data = snapshot.data!.docs;
+            for (var i in data) {
+              final userData = i.data();
+              if (userData != null) {
+                print('Data: ${jsonEncode(userData)}');
+                list.add(userData['about']);
+              }
+            }
+          }
+
+          return ListView.builder(
+            itemCount: list.length,
+            padding: const EdgeInsets.only(top: 2),
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              final itemName = index < list.length ? list[index] : '';
+              return Text('About: $itemName');
+            },
+          );
+        },
+      ),
     );
   }
 }
