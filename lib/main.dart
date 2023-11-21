@@ -52,6 +52,6 @@ class App extends StatelessWidget {
                 color: Color.fromARGB(255, 68, 255, 196),
               ),
             ),
-            home: const HomeScreen(),
+            home: const LoginScreen(),
           ));
 }

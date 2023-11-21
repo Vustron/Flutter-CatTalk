@@ -1,14 +1,16 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wechat/model/chat_user.dart';
 import 'package:wechat/utils/chatUserCard.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
-import '../utils/API.dart';
+import '../controller/api.dart';
 import 'auth/login_screen.dart';
 
 // Home Screen
@@ -20,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<ChatUser> list = [];
+
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -133,28 +137,46 @@ class _HomeScreenState extends State<HomeScreen> {
       body: StreamBuilder(
         stream: API.firestore.collection('users').snapshots(),
         builder: (context, snapshot) {
-          final list = [];
+          switch (snapshot.connectionState) {
+            // If data is loading
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+              return Center(
+                child: SpinKitFadingCube(
+                  color: Colors.blue,
+                  size: 50.0,
+                ),
+              );
 
-          if (snapshot.hasData) {
-            final data = snapshot.data!.docs;
-            for (var i in data) {
-              final userData = i.data();
-              if (userData != null) {
-                print('Data: ${jsonEncode(userData)}');
-                list.add(userData['about']);
+            // If some or all data is loaded then show it
+            case ConnectionState.active:
+            case ConnectionState.done:
+              final data = snapshot.data?.docs;
+              list =
+                  data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+
+              if (list.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: list.length,
+                  padding: const EdgeInsets.only(top: 2),
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    // final itemName = list[index].name;
+                    // return Text('Name: $itemName');
+                    return ChatUserCard(user: list[index]);
+                  },
+                );
+              } else {
+                return const Center(
+                  child: Text(
+                    'No Connection Found!',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                );
               }
-            }
           }
-
-          return ListView.builder(
-            itemCount: list.length,
-            padding: const EdgeInsets.only(top: 2),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              final itemName = index < list.length ? list[index] : '';
-              return Text('About: $itemName');
-            },
-          );
         },
       ),
     );

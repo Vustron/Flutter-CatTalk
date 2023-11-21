@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
 import 'package:wechat/utils/dialog.dart';
+import '../../controller/API.dart';
 import '../../controller/googleAuth.dart';
 import '../home_screen.dart';
 
@@ -57,11 +58,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   final provider =
                       Provider.of<GoogleSignInProvider>(context, listen: false);
                   await provider.googleLogin();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const HomeScreen(),
-                      ));
+                  if (await API.userExists()) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const HomeScreen(),
+                        ));
+                  } else {
+                    await API.createUser().then((value) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ));
+                    });
+                  }
                 } catch (error) {
                   print('Error during Google login: $error');
                   Dialogs.showSnackBar(
