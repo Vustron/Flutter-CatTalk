@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
 import '../controller/api.dart';
+import '../utils/dialog.dart';
 import 'auth/login_screen.dart';
 
 // Home Screen
@@ -36,14 +37,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton.extended(
           onPressed: () async {
+            // showing progress
+            Dialogs.showProgressBar(context);
+            // Google provider and listener
             final provider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);
-            await provider.googleLogout();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => LoginScreen(),
-                ));
+            await provider.googleLogout().then((value) async {
+              // for hiding progress dialog
+              Navigator.pop(context);
+              // for moving to home screen
+              Navigator.pop(context);
+              // Replacing home screen with login screen
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LoginScreen(),
+                  ));
+            });
           },
           icon: const Icon(
             Icons.logout,
@@ -65,22 +75,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Space
             SizedBox(width: mq.width, height: mq.height * .03),
             // User Profile Picture
-            ClipRRect(
-              borderRadius: BorderRadius.circular(mq.height * .1),
-              child: CachedNetworkImage(
-                width: mq.height * .2,
-                height: mq.height * .2,
-                fit: BoxFit.fill,
-                imageUrl: widget.user.image,
-                placeholder: (context, url) {
-                  return CircularProgressIndicator();
-                },
-                errorWidget: (context, url, error) {
-                  return const CircleAvatar(
-                    child: Icon(Icons.person),
-                  );
-                },
-              ),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(mq.height * .1),
+                  child: CachedNetworkImage(
+                    width: mq.height * .2,
+                    height: mq.height * .2,
+                    fit: BoxFit.fill,
+                    imageUrl: widget.user.image,
+                    placeholder: (context, url) {
+                      return CircularProgressIndicator();
+                    },
+                    errorWidget: (context, url, error) {
+                      return const CircleAvatar(
+                        child: Icon(Icons.person),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: MaterialButton(
+                    elevation: 1,
+                    onPressed: () {},
+                    shape: const CircleBorder(),
+                    color: Colors.white,
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
             ),
             // Space
             SizedBox(height: mq.height * .03),
