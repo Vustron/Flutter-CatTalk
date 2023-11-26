@@ -30,86 +30,88 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // mq = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Welcome to WeChat"),
-      ),
-      body: Stack(children: [
-        // App Logo
-        AnimatedPositioned(
-            top: _isAnimate ? mq.height * .15 : -mq.width * .5,
-            right: mq.width * .25,
-            width: mq.width * .5,
-            duration: const Duration(seconds: 1),
-            child: Image.asset('assets/images/icon.png')),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text("Welcome to WeChat"),
+        ),
+        body: Stack(children: [
+          // App Logo
+          AnimatedPositioned(
+              top: _isAnimate ? mq.height * .15 : -mq.width * .5,
+              right: mq.width * .25,
+              width: mq.width * .5,
+              duration: const Duration(seconds: 1),
+              child: Image.asset('assets/images/icon.png')),
 
-        // google login
-        AnimatedPositioned(
-          bottom: _isAnimate ? mq.height * 0.2 : -mq.width * .5,
-          left: mq.width * 0.17,
-          height: mq.height * 0.2,
-          duration: const Duration(seconds: 1),
-          child: Center(
-            child: ElevatedButton.icon(
-              onPressed: () async {
-                Dialogs.showProgressBar(context);
-                try {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
-                  await provider.googleLogin();
-                  if (await API.userExists()) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const HomeScreen(),
-                        ));
-                  } else {
-                    await API.createUser().then((value) {
+          // google login
+          AnimatedPositioned(
+            bottom: _isAnimate ? mq.height * 0.2 : -mq.width * .5,
+            left: mq.width * 0.17,
+            height: mq.height * 0.2,
+            duration: const Duration(seconds: 1),
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  Dialogs.showProgressBar(context);
+                  try {
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    await provider.googleLogin();
+                    if (await API.userExists()) {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (_) => const HomeScreen(),
                           ));
-                    });
+                    } else {
+                      await API.createUser().then((value) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomeScreen(),
+                            ));
+                      });
+                    }
+                  } catch (error) {
+                    print('Error during Google login: $error');
+                    Dialogs.showSnackBar(
+                        context, 'Something went wrong (Check Internet)');
                   }
-                } catch (error) {
-                  print('Error during Google login: $error');
-                  Dialogs.showSnackBar(
-                      context, 'Something went wrong (Check Internet)');
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 68, 255, 196),
-                shape: const StadiumBorder(),
-                elevation: 1,
-              ),
-              icon: SizedBox(
-                width: mq.height * 0.05,
-                height: mq.height * 0.07,
-                child: Image.asset('assets/images/google.png'),
-              ),
-              label: RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 19,
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 68, 255, 196),
+                  shape: const StadiumBorder(),
+                  elevation: 1,
+                ),
+                icon: SizedBox(
+                  width: mq.height * 0.05,
+                  height: mq.height * 0.07,
+                  child: Image.asset('assets/images/google.png'),
+                ),
+                label: RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                    ),
+                    children: [
+                      TextSpan(text: 'Login with '),
+                      TextSpan(
+                        text: 'Google',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      )
+                    ],
                   ),
-                  children: [
-                    TextSpan(text: 'Login with '),
-                    TextSpan(
-                      text: 'Google',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    )
-                  ],
                 ),
               ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

@@ -22,10 +22,15 @@ class _ChatScreenState extends State<ChatScreen> {
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
         ),
+        // body
+        body: Column(
+          children: [_chatInput()],
+        ),
       ),
     );
   }
 
+  // appbar widget
   Widget _appBar() {
     return InkWell(
       onTap: () {},
@@ -80,6 +85,72 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // bottom chat input field
+  Widget _chatInput() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: mq.height * .01, horizontal: mq.width * .025),
+      child: Row(
+        children: [
+          Expanded(
+            child: Card(
+              child: Row(
+                children: [
+                  // emoji button
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.emoji_emotions,
+                        color: Color.fromARGB(255, 68, 255, 196), size: 25),
+                  ),
+                  const Expanded(
+                      child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Type something...',
+                      hintStyle: TextStyle(
+                        color: Color.fromARGB(255, 68, 255, 196),
+                        fontSize: 14,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  )),
+                  // pick an image from gallery button
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.image,
+                        color: Color.fromARGB(255, 68, 255, 196), size: 26),
+                  ),
+                  // take an image from camera button
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.camera_alt_rounded,
+                        color: Color.fromARGB(255, 68, 255, 196), size: 26),
+                  ),
+                  // add space
+                  SizedBox(width: mq.width * .02),
+                ],
+              ),
+            ),
+          ),
+          // send message button
+          MaterialButton(
+            onPressed: () {},
+            minWidth: 0,
+            padding: EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
+            shape: const CircleBorder(),
+            color: Colors.green,
+            child: const Icon(
+              Icons.send,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+        ],
       ),
     );
   }
