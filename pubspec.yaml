@@ -36,6 +36,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_spinkit: ^5.2.0
   cached_network_image: ^3.3.0
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5

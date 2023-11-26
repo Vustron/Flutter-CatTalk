@@ -28,12 +28,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size;
+    // mq = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Welcome to We Chat"),
+        title: const Text("Welcome to WeChat"),
       ),
       body: Stack(children: [
         // App Logo

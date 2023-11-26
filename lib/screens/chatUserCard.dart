@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../main.dart';
+import 'chat_screen.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -20,7 +21,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          // Navigating to chat screen
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user)));
+        },
         child: ListTile(
           // User profile picture
           leading: ClipRRect(

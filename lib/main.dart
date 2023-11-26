@@ -5,9 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'controller/googleAuth.dart';
+import 'screens/splash_screen.dart';
 import 'services/firebase_options.dart';
-import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 //global object for accessing device screen size
 late Size mq;
@@ -52,6 +53,7 @@ class App extends StatelessWidget {
                 color: Color.fromARGB(255, 68, 255, 196),
               ),
             ),
-            home: const LoginScreen(),
+            builder: EasyLoading.init(),
+            home: const SplashScreen(),
           ));
 }
