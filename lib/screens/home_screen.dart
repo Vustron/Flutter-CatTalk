@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +23,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChatUser> list = [];
+  // For storing all users
+  List<ChatUser> _list = [];
+  // for storing search items
+  final List<ChatUser> _searchList = [];
+  // for storing search status
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -36,13 +41,47 @@ class _HomeScreenState extends State<HomeScreen> {
     final User? user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: const Icon(CupertinoIcons.home),
-        title: const Text("We Chat"),
+        title: _isSearching
+            ? TextField(
+                autofocus: true,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  letterSpacing: 0.5,
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Name, Email...',
+                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                ),
+                // Search logic
+                onChanged: (val) {
+                  _searchList.clear();
+                  for (var i in _list) {
+                    if (i.name.toLowerCase().contains(val.toLowerCase()) ||
+                        i.email.toLowerCase().contains(val.toLowerCase())) {
+                      _searchList.add(i);
+                    }
+                    setState(() {
+                      _searchList;
+                    });
+                  }
+                },
+              )
+            : Text("WeChat"),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
+            onPressed: () async {
+              setState(() {
+                _isSearching = !_isSearching;
+              });
+            },
+            icon: Icon(
+              _isSearching ? CupertinoIcons.clear_circled_solid : Icons.search,
+            ),
           ),
           IconButton(
             onPressed: () {
@@ -85,18 +124,19 @@ class _HomeScreenState extends State<HomeScreen> {
             case ConnectionState.active:
             case ConnectionState.done:
               final data = snapshot.data?.docs;
-              list =
+              _list =
                   data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-              if (list.isNotEmpty) {
+              if (_list.isNotEmpty) {
                 return ListView.builder(
-                  itemCount: list.length,
+                  itemCount: _isSearching ? _searchList.length : _list.length,
                   padding: const EdgeInsets.only(top: 2),
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     // final itemName = list[index].name;
                     // return Text('Name: $itemName');
-                    return ChatUserCard(user: list[index]);
+                    return ChatUserCard(
+                        user: _isSearching ? _searchList[index] : _list[index]);
                   },
                 );
               } else {
