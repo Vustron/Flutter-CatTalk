@@ -1,37 +1,37 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 class Message {
   Message({
-    required this.told,
+    required this.fromId,
     required this.msg,
     required this.read,
-    required this.fromId,
-    required this.type,
     required this.sent,
+    required this.told,
+    required this.type,
   });
-  late String told;
+  late String fromId;
   late String msg;
   late String read;
-  late String fromId;
-  late Type type;
   late String sent;
+  late String told;
+  late Type type;
 
   Message.fromJson(Map<String, dynamic> json) {
-    told = json['told'].toString();
+    fromId = json['fromId'].toString();
     msg = json['msg'].toString();
     read = json['read'].toString();
-    fromId = json['fromId'].toString();
-    type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
     sent = json['sent'].toString();
+    told = json['told'].toString();
+    type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['told'] = told;
+    data['fromId'] = fromId;
     data['msg'] = msg;
     data['read'] = read;
-    data['fromId'] = fromId;
-    data['type'] = type.name;
     data['sent'] = sent;
+    data['told'] = told;
+    data['type'] = type.name;
     return data;
   }
 }

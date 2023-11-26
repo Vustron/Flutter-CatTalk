@@ -1,13 +1,14 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:wechat/model/message.dart';
 import '../main.dart';
+import '../utils/messageCard.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -19,6 +20,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  // for storing messages
+  List<Message> _list = [];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,6 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
         ),
+
+        backgroundColor: Color.fromARGB(255, 234, 248, 255),
         // body
         body: Column(
           children: [
@@ -54,11 +60,23 @@ class _ChatScreenState extends State<ChatScreen> {
                       //         ?.map((e) => ChatUser.fromJson(e.data()))
                       //         .toList() ??
                       //     [];
-
-                      final _list = [
-                        'hi',
-                        'hello',
-                      ];
+                      _list.clear();
+                      _list.add(Message(
+                        fromId: API.user.uid,
+                        msg: 'Hi!',
+                        read: '',
+                        sent: '12:00 AM',
+                        told: 'xyz',
+                        type: Type.text,
+                      ));
+                      _list.add(Message(
+                        fromId: 'xyz',
+                        msg: 'Hello',
+                        read: '',
+                        sent: '12:05 AM',
+                        told: API.user.uid,
+                        type: Type.text,
+                      ));
 
                       if (_list.isNotEmpty) {
                         return ListView.builder(
@@ -66,8 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: const EdgeInsets.only(top: 2),
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final message = _list[index];
-                            return Text('Message: $message');
+                            return MessageCard(message: _list[index]);
                           },
                         );
                       } else {
