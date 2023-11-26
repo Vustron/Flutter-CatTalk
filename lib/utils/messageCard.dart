@@ -1,7 +1,10 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, unnecessary_string_interpolations
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:wechat/utils/my_date_util.dart';
 import '../controller/API.dart';
 import '../main.dart';
 import '../model/message.dart';
@@ -26,6 +29,11 @@ class _MessageCardState extends State<MessageCard> {
 
   // sender or another user message
   Widget _blueMessage() {
+    // update last read message if sender and reciever are different
+    if (widget.message.read.isEmpty) {
+      API.updateMessageReadStatus(widget.message);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -58,7 +66,8 @@ class _MessageCardState extends State<MessageCard> {
         Padding(
           padding: EdgeInsets.only(right: mq.width * .04),
           child: Text(
-            widget.message.sent,
+            MyDateUtil.getFormattedTime(
+                context: context, time: widget.message.sent),
             style: TextStyle(
               fontSize: 13,
               color: Colors.black54,
@@ -80,6 +89,12 @@ class _MessageCardState extends State<MessageCard> {
             // for adding some space
             SizedBox(width: mq.width * .04),
             // double tick blue icon for message read
+            if (widget.message.read.isEmpty)
+              const Icon(
+                Icons.done_all_rounded,
+                color: Colors.blue,
+                size: 20,
+              ),
             const Icon(
               Icons.done_all_rounded,
               color: Colors.blue,
@@ -88,9 +103,9 @@ class _MessageCardState extends State<MessageCard> {
             // for adding some space
             SizedBox(width: 2),
             // read time
-
             Text(
-              widget.message.read + '12:00 PM',
+              MyDateUtil.getFormattedTime(
+                  context: context, time: widget.message.sent),
               style: TextStyle(
                 fontSize: 13,
                 color: Colors.black54,
