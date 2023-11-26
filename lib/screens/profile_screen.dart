@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, use_build_context_synchronously
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -260,10 +261,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
                       // pick an image
-                      final XFile? image = await picker.pickImage(
-                          source: ImageSource.gallery, imageQuality: 80);
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.gallery);
                       if (image != null) {
-                        print('Image Path: ${image.path}');
+                        log('Image Path: ${image.path}');
                         setState(() {
                           _image = image.path;
                         });
@@ -284,10 +285,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
                       // pick an image
-                      final XFile? image = await picker.pickImage(
-                          source: ImageSource.camera, imageQuality: 80);
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.camera);
                       if (image != null) {
-                        print('Image Path: ${image.path}');
+                        log('Image Path: ${image.path}');
                         setState(() {
                           _image = image.path;
                         });
