@@ -14,7 +14,7 @@ import '../controller/api.dart';
 import '../utils/dialog.dart';
 import 'auth/login_screen.dart';
 
-// Home Screen
+// Profile Screen
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
   const ProfileScreen({super.key, required this.user});
@@ -104,7 +104,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         right: 0,
                         child: MaterialButton(
                           elevation: 1,
-                          onPressed: () {},
+                          onPressed: () {
+                            _showBottomSheet();
+                          },
                           shape: const CircleBorder(),
                           color: Colors.white,
                           child: Icon(
@@ -203,5 +205,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return ListView(
+            shrinkWrap: true,
+            padding:
+                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+            children: [
+              // pick profile picture label
+              const Text(
+                'Pick Profile Picture',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              // for adding some space
+              SizedBox(height: mq.height * .02),
+              // buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // pick from gallery button
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      fixedSize: Size(mq.width * .3, mq.height * .15),
+                    ),
+                    onPressed: () {},
+                    child: Image.asset('assets/images/add_image.png'),
+                  ),
+                  // take a picture from camera
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      fixedSize: Size(mq.width * .3, mq.height * .15),
+                    ),
+                    onPressed: () {},
+                    child: Image.asset('assets/images/camera.png'),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
   }
 }
