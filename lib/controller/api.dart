@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, avoid_print
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -69,6 +71,33 @@ class API {
     await firestore.collection('users').doc(user.uid).update({
       'name': me.name,
       'about': me.about,
+    });
+  }
+
+  // for updating user profile picture
+  static Future<void> updateUserProfilePicture(File file) async {
+    // Getting image file extension
+    final ext = file.path.split('.').last;
+    print('Extension: $ext');
+
+    // storage file ref with path
+    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
+
+    // uploading image
+    await ref
+        .putFile(
+            file,
+            SettableMetadata(
+              contentType: 'image/$ext',
+            ))
+        .then((p0) {
+      print('Data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+
+    // Updating image in firestore database
+    me.image = await ref.getDownloadURL();
+    await firestore.collection('users').doc(user.uid).update({
+      'image': me.image,
     });
   }
 }
