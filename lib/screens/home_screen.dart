@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/model/chat_user.dart';
-import 'chatUserCard.dart';
+import '../utils/chatUserCard.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
@@ -137,9 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   // If data is loading
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                    return Center(
-                      child: SpinKitFadingCube(
-                        color: Colors.blue,
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: Color.fromARGB(255, 68, 255, 196),
                         size: 50.0,
                       ),
                     );

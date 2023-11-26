@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../main.dart';
-import 'chat_screen.dart';
+import '../screens/chat_screen.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;

@@ -1,5 +1,10 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../main.dart';
@@ -24,7 +29,63 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         // body
         body: Column(
-          children: [_chatInput()],
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: API.getAllMessages(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    // If data is loading
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(
+                        child: SpinKitFadingCircle(
+                          color: Color.fromARGB(255, 68, 255, 196),
+                          size: 50.0,
+                        ),
+                      );
+
+                    // If some or all data is loaded then show it
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      log('Data: ${jsonEncode(data![0].data())}');
+                      // _list = data
+                      //         ?.map((e) => ChatUser.fromJson(e.data()))
+                      //         .toList() ??
+                      //     [];
+
+                      final _list = [
+                        'hi',
+                        'hello',
+                      ];
+
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                          itemCount: _list.length,
+                          padding: const EdgeInsets.only(top: 2),
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final message = _list[index];
+                            return Text('Message: $message');
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            'Say Hi! 👋',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        );
+                      }
+                  }
+                },
+              ),
+            ),
+            _chatInput()
+          ],
         ),
       ),
     );

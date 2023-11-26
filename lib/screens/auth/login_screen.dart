@@ -1,4 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
@@ -75,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     }
                   } catch (error) {
-                    print('Error during Google login: $error');
+                    log('Error during Google login: $error');
                     Dialogs.showSnackBar(
                         context, 'Something went wrong (Check Internet)');
                   }
