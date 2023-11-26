@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, use_build_context_synchronously
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:wechat/utils/chatUserCard.dart';
@@ -25,6 +27,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -82,23 +85,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   // Space
                   SizedBox(width: mq.width, height: mq.height * .03),
-                  // User Profile Picture
+
                   Stack(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(mq.height * .1),
-                        child: CachedNetworkImage(
-                          width: mq.height * .2,
-                          height: mq.height * .2,
-                          fit: BoxFit.fill,
-                          imageUrl: widget.user.image,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => CircleAvatar(
-                            child: Icon(Icons.person),
-                          ),
-                        ),
-                      ),
+                      // User Profile Picture
+                      _image != null
+                          ?
+                          // local image
+                          ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(mq.height * .1),
+                              child: Image.file(
+                                File(_image!),
+                                width: mq.height * .2,
+                                height: mq.height * .2,
+                                fit: BoxFit.cover,
+                              ))
+                          :
+                          // image from server
+                          ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(mq.height * .1),
+                              child: CachedNetworkImage(
+                                width: mq.height * .2,
+                                height: mq.height * .2,
+                                fit: BoxFit.fill,
+                                imageUrl: widget.user.image,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    CircleAvatar(
+                                  child: Icon(Icons.person),
+                                ),
+                              ),
+                            ),
+                      // Edit image button
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -234,7 +255,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Colors.white,
                       fixedSize: Size(mq.width * .3, mq.height * .15),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+                      // pick an image
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.gallery);
+                      if (image != null) {
+                        print('Image Path: ${image.path}');
+                        setState(() {
+                          _image = image.path;
+                        });
+                        // for hiding bottom sheet
+                        Navigator.pop(context);
+                      }
+                    },
                     child: Image.asset('assets/images/add_image.png'),
                   ),
                   // take a picture from camera
@@ -243,7 +277,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Colors.white,
                       fixedSize: Size(mq.width * .3, mq.height * .15),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+                      // pick an image
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.camera);
+                      if (image != null) {
+                        print('Image Path: ${image.path}');
+                        setState(() {
+                          _image = image.path;
+                        });
+                        // for hiding bottom sheet
+                        Navigator.pop(context);
+                      }
+                    },
                     child: Image.asset('assets/images/camera.png'),
                   ),
                 ],
