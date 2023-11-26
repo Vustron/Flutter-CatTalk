@@ -27,16 +27,60 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _appBar() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.only(top: 1),
+        child: Row(
+          // Back button
+          children: [
+            IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+            // User profile picture
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: CachedNetworkImage(
+                width: mq.height * .06,
+                height: mq.height * .06,
+                imageUrl: widget.user.image,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => CircleAvatar(
+                  child: Icon(Icons.person),
+                ),
+              ),
+            ),
+            // for adding space
+            const SizedBox(width: 10),
+            // User Name
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.user.name,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const Text(
+                  'Last seen not available',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
