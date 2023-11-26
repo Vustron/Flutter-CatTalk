@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,14 +27,10 @@ class _ChatUserCardState extends State<ChatUserCard> {
             borderRadius: BorderRadius.circular(30),
             child: CachedNetworkImage(
               imageUrl: widget.user.image,
-              placeholder: (context, url) {
-                return CircularProgressIndicator();
-              },
-              errorWidget: (context, url, error) {
-                return const CircleAvatar(
-                  child: Icon(Icons.person),
-                );
-              },
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => CircleAvatar(
+                child: Icon(Icons.person),
+              ),
             ),
           ),
           // User name

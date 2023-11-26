@@ -84,14 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: mq.height * .2,
                     fit: BoxFit.fill,
                     imageUrl: widget.user.image,
-                    placeholder: (context, url) {
-                      return CircularProgressIndicator();
-                    },
-                    errorWidget: (context, url, error) {
-                      return const CircleAvatar(
-                        child: Icon(Icons.person),
-                      );
-                    },
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
                   ),
                 ),
                 Positioned(
