@@ -89,17 +89,12 @@ class _MessageCardState extends State<MessageCard> {
             // for adding some space
             SizedBox(width: mq.width * .04),
             // double tick blue icon for message read
-            if (widget.message.read.isEmpty)
+            if (widget.message.read.isNotEmpty)
               const Icon(
                 Icons.done_all_rounded,
                 color: Colors.blue,
                 size: 20,
               ),
-            const Icon(
-              Icons.done_all_rounded,
-              color: Colors.blue,
-              size: 20,
-            ),
             // for adding some space
             SizedBox(width: 2),
             // read time

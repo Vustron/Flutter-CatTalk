@@ -175,7 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: InputDecoration(
                       hintText: 'Type something...',
                       hintStyle: TextStyle(
-                        color: Color.fromARGB(255, 68, 255, 196),
+                        color: Colors.black,
                         fontSize: 14,
                       ),
                       border: InputBorder.none,
