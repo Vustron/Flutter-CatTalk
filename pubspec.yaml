@@ -37,6 +37,7 @@ dependencies:
   flutter_spinkit: ^5.2.0
   cached_network_image: ^3.3.0
   flutter_easyloading: ^3.0.5
+  emoji_picker_flutter: ^1.6.3
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5
