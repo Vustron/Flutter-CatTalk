@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/model/chat_user.dart';
 import '../utils/chatUserCard.dart';
@@ -34,6 +36,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     API.getSelfInfo();
+
+    // for setting user status to active
+    API.updateActiveStatus(true);
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('Message: $message');
+
+      // for updating user active status according to lifecycle events
+      // resume = active or online
+      // pause = inactive or offline
+      if (message.toString().contains('resume')) API.updateActiveStatus(true);
+      if (message.toString().contains('pause')) API.updateActiveStatus(false);
+
+      return Future.value(message);
+    });
   }
 
   @override

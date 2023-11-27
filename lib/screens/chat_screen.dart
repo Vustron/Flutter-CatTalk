@@ -10,6 +10,7 @@ import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wechat/model/message.dart';
+import 'package:wechat/utils/my_date_util.dart';
 import '../main.dart';
 import '../utils/messageCard.dart';
 
@@ -170,57 +171,75 @@ class _ChatScreenState extends State<ChatScreen> {
     return InkWell(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.only(top: 1),
-        child: Row(
-          // Back button
-          children: [
-            IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-            ),
-            // User profile picture
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: CachedNetworkImage(
-                width: mq.height * .06,
-                height: mq.height * .06,
-                imageUrl: widget.user.image,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => CircleAvatar(
-                  child: Icon(Icons.person),
-                ),
-              ),
-            ),
-            // for adding space
-            const SizedBox(width: 10),
-            // User Name
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.user.name,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const Text(
-                  'Last seen not available',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.only(top: 1),
+          child: StreamBuilder(
+              stream: API.getUserInfo(widget.user),
+              builder: (context, snapshot) {
+                final data = snapshot.data?.docs;
+                final list =
+                    data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                        [];
+
+                return Row(
+                  // Back button
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // User profile picture
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: CachedNetworkImage(
+                        width: mq.height * .06,
+                        height: mq.height * .06,
+                        imageUrl:
+                            list.isNotEmpty ? list[0].image : widget.user.image,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
+                      ),
+                    ),
+                    // for adding space
+                    const SizedBox(width: 10),
+                    // User Name
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          list.isNotEmpty ? list[0].name : widget.user.name,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          list.isNotEmpty
+                              ? list[0].isOnline
+                                  ? 'Online'
+                                  : MyDateUtil.getLastActiveTime(
+                                      context: context,
+                                      lastActive: list[0].lastActive)
+                              : MyDateUtil.getLastActiveTime(
+                                  context: context,
+                                  lastActive: widget.user.lastActive),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              })),
     );
   }
 
