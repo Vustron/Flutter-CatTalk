@@ -10,6 +10,7 @@ import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wechat/model/message.dart';
+import 'package:wechat/screens/view_profile_screen.dart';
 import 'package:wechat/utils/my_date_util.dart';
 import '../main.dart';
 import '../utils/messageCard.dart';
@@ -169,7 +170,12 @@ class _ChatScreenState extends State<ChatScreen> {
   // appbar widget
   Widget _appBar() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ViewProfileScreen(user: widget.user)));
+      },
       child: Padding(
           padding: const EdgeInsets.only(top: 1),
           child: StreamBuilder(
