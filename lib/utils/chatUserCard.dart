@@ -47,10 +47,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
               return ListTile(
                   // User profile picture
                   leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * 0.3),
+                    borderRadius: BorderRadius.circular(mq.height * .1),
                     child: CachedNetworkImage(
                       width: mq.height * .055,
                       height: mq.height * .055,
+                      fit: BoxFit.fill,
                       imageUrl: widget.user.image,
                       placeholder: (context, url) =>
                           CircularProgressIndicator(),

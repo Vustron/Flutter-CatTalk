@@ -238,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return ListView(
             shrinkWrap: true,
             padding:
-                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .1),
             children: [
               // pick profile picture label
               const Text(
@@ -247,7 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
               // for adding some space
-              SizedBox(height: mq.height * .02),
+              SizedBox(height: mq.height * .04),
               // buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -261,8 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
                       // pick an image
-                      final XFile? image =
-                          await picker.pickImage(source: ImageSource.gallery);
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery, imageQuality: 80);
                       if (image != null) {
                         log('Image Path: ${image.path}');
                         setState(() {
@@ -285,8 +285,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
                       // pick an image
-                      final XFile? image =
-                          await picker.pickImage(source: ImageSource.camera);
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.camera, imageQuality: 80);
                       if (image != null) {
                         log('Image Path: ${image.path}');
                         setState(() {

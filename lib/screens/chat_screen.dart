@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -254,7 +255,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   // take an image from camera button
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+                      // pick an image
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.camera);
+                      if (image != null) {
+                        log('Image Path: ${image.path}');
+
+                        await API.sendChatImage(widget.user, File(image.path));
+                      }
+                    },
                     icon: const Icon(Icons.camera_alt_rounded,
                         color: Color.fromARGB(255, 68, 255, 196), size: 26),
                   ),
@@ -271,6 +282,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 API.sendMessage(
                   widget.user,
                   _textController.text,
+                  Type.text,
                 );
                 _textController.text = '';
               }
