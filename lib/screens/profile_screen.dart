@@ -47,6 +47,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 // showing progress
                 Dialogs.showProgressBar(context);
+
+                await API.updateActiveStatus(false);
+
                 // Google provider and listener
                 final provider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
@@ -55,6 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.pop(context);
                   // for moving to home screen
                   Navigator.pop(context);
+
+                  API.auth = FirebaseAuth.instance;
+
                   // Replacing home screen with login screen
                   Navigator.pushReplacement(
                       context,

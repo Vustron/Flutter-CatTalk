@@ -45,8 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
       // for updating user active status according to lifecycle events
       // resume = active or online
       // pause = inactive or offline
-      if (message.toString().contains('resume')) API.updateActiveStatus(true);
-      if (message.toString().contains('pause')) API.updateActiveStatus(false);
+      if (API.auth.currentUser != null) {
+        if (message.toString().contains('resume')) {
+          API.updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          API.updateActiveStatus(false);
+        }
+      }
 
       return Future.value(message);
     });
