@@ -154,57 +154,81 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: const Color.fromARGB(255, 68, 255, 196),
               ),
             ),
+            // body
             body: StreamBuilder(
-              stream: API.getAllUsers(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  // If data is loading
-                  case ConnectionState.waiting:
-                  case ConnectionState.none:
-                    return const Center(
-                      child: SpinKitFadingCircle(
-                        color: Color.fromARGB(255, 68, 255, 196),
-                        size: 50.0,
-                      ),
-                    );
+                stream: API.getMyUsersId(),
 
-                  // If some or all data is loaded then show it
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    final data = snapshot.data?.docs;
-                    _list = data
-                            ?.map((e) => ChatUser.fromJson(e.data()))
-                            .toList() ??
-                        [];
-
-                    if (_list.isNotEmpty) {
-                      return ListView.builder(
-                        itemCount:
-                            _isSearching ? _searchList.length : _list.length,
-                        padding: const EdgeInsets.only(top: 2),
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          // final itemName = list[index].name;
-                          // return Text('Name: $itemName');
-                          return ChatUserCard(
-                              user: _isSearching
-                                  ? _searchList[index]
-                                  : _list[index]);
-                        },
-                      );
-                    } else {
+                // get id of only known users
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    // If data is loading
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
                       return const Center(
-                        child: Text(
-                          'No Connection Found!',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
+                        child: SpinKitFadingCircle(
+                          color: Color.fromARGB(255, 68, 255, 196),
+                          size: 50.0,
                         ),
                       );
-                    }
-                }
-              },
-            ),
+
+                    // If some or all data is loaded then show it
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      return StreamBuilder(
+                        stream: API.getAllUsers(
+                            snapshot.data?.docs.map((e) => e.id).toList() ??
+                                []),
+
+                        // get only those user, who's ids are provided
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            // If data is loading
+                            case ConnectionState.waiting:
+                            case ConnectionState.none:
+                              return const Center(
+                                child: SpinKitFadingCircle(
+                                  color: Color.fromARGB(255, 68, 255, 196),
+                                  size: 50.0,
+                                ),
+                              );
+
+                            // If some or all data is loaded then show it
+                            case ConnectionState.active:
+                            case ConnectionState.done:
+                              final data = snapshot.data?.docs;
+                              _list = data
+                                      ?.map((e) => ChatUser.fromJson(e.data()))
+                                      .toList() ??
+                                  [];
+
+                              if (_list.isNotEmpty) {
+                                return ListView.builder(
+                                    itemCount: _isSearching
+                                        ? _searchList.length
+                                        : _list.length,
+                                    padding:
+                                        EdgeInsets.only(top: mq.height * .01),
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return ChatUserCard(
+                                          user: _isSearching
+                                              ? _searchList[index]
+                                              : _list[index]);
+                                    });
+                              } else {
+                                return const Center(
+                                    child: Text(
+                                  'No Connection Found!',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ));
+                              }
+                          }
+                        },
+                      );
+                  }
+                }),
           ),
         ),
       ),
