@@ -91,7 +91,34 @@ class API {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
   }
 
-  // check if the user exists or not
+  // for adding chat user in our conversation
+  static Future<bool> addChatUser(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    log('Data: ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      // if user exists
+
+      log('User exists: ${data.docs.first.data()}');
+
+      firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+      return true;
+    } else {
+      // if user didn't exists
+      return false;
+    }
+  }
+
+  // for getting user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {

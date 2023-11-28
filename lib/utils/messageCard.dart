@@ -207,7 +207,7 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.blue,
                         size: 26,
                       ),
-                      name: 'Copy Text',
+                      name: ' Copy Text',
                       onTap: () async {
                         await Clipboard.setData(
                                 ClipboardData(text: widget.message.msg))
@@ -224,7 +224,7 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.blue,
                         size: 26,
                       ),
-                      name: 'Save Image',
+                      name: ' Save Image',
                       onTap: () async {
                         try {
                           log('Image Url: ${widget.message.msg}');
@@ -258,7 +258,7 @@ class _MessageCardState extends State<MessageCard> {
                       color: Colors.yellow[900],
                       size: 26,
                     ),
-                    name: 'Edit Message',
+                    name: ' Edit Message',
                     onTap: () {
                       // for hiding  bottom sheet
                       Navigator.pop(context);
@@ -273,7 +273,7 @@ class _MessageCardState extends State<MessageCard> {
                       color: Colors.red,
                       size: 26,
                     ),
-                    name: 'Delete Message',
+                    name: ' Delete Message',
                     onTap: () async {
                       await API.deleteMessage(widget.message).then((value) {
                         // for hiding  bottom sheet
@@ -296,7 +296,7 @@ class _MessageCardState extends State<MessageCard> {
                     color: Colors.blue,
                   ),
                   name:
-                      'Sent At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.sent)}',
+                      ' Sent At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.sent)}',
                   onTap: () {}),
               // read time
               _OptionItem(
@@ -305,8 +305,8 @@ class _MessageCardState extends State<MessageCard> {
                     color: Colors.lightGreen,
                   ),
                   name: widget.message.read.isEmpty
-                      ? 'Read At: Not seen yet'
-                      : 'Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read)}',
+                      ? ' Read At: Not seen yet'
+                      : ' Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read)}',
                   onTap: () {}),
 
               // buttons
@@ -333,7 +333,7 @@ class _MessageCardState extends State<MessageCard> {
                     size: 28,
                   ),
                   Text(
-                    'Update Message',
+                    ' Update Message',
                     style: TextStyle(
                       fontSize: 20,
                     ),

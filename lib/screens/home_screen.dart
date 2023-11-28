@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
 import '../controller/api.dart';
+import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
 import 'profile_screen.dart';
 
@@ -139,10 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            // Add user button
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  _addChatUserDialog();
+                },
                 child: const Icon(
                   Icons.add_comment_rounded,
                   color: Colors.white,
@@ -205,5 +209,86 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  // dialog for updating message content
+  void _addChatUserDialog() {
+    String email = '';
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              contentPadding:
+                  EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+              // title
+              title: Row(
+                children: const [
+                  Icon(
+                    Icons.person_add,
+                    color: Colors.green,
+                    size: 28,
+                  ),
+                  Text(
+                    ' Add User',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              // content
+              content: TextFormField(
+                maxLines: null,
+                onChanged: (value) => email = value,
+                decoration: InputDecoration(
+                  hintText: 'Email Id',
+                  prefixIcon: const Icon(
+                    Icons.email,
+                    color: Colors.blue,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+              // actions
+              actions: [
+                // add button
+                MaterialButton(
+                  onPressed: () async {
+                    // hide alert dialog
+                    Navigator.pop(context);
+                    if (email.isNotEmpty) {
+                      await API.addChatUser(email).then((value) {
+                        if (!value) {
+                          Dialogs.showSnackBar(context, 'User does not exist');
+                        }
+                      });
+                    }
+                  },
+                  child: Text(
+                    'Add',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                // cancel button
+                MaterialButton(
+                  onPressed: () {
+                    // hide alert dialog
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ));
   }
 }
