@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wechat/utils/my_date_util.dart';
@@ -9,6 +10,7 @@ import '../controller/API.dart';
 import '../main.dart';
 import '../model/message.dart';
 import '../screens/chat_screen.dart';
+import 'dialogs/dialog.dart';
 
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
@@ -206,7 +208,15 @@ class _MessageCardState extends State<MessageCard> {
                         size: 26,
                       ),
                       name: 'Copy Text',
-                      onTap: () {})
+                      onTap: () async {
+                        await Clipboard.setData(
+                                ClipboardData(text: widget.message.msg))
+                            .then((value) {
+                          // for hiding bottom sheet
+                          Navigator.pop(context);
+                          Dialogs.showSnackBarCopy(context, 'Text Copied');
+                        });
+                      })
                   : // copy option
                   _OptionItem(
                       icon: Icon(
@@ -244,7 +254,12 @@ class _MessageCardState extends State<MessageCard> {
                       size: 26,
                     ),
                     name: 'Delete Message',
-                    onTap: () {}),
+                    onTap: () async {
+                      await API.deleteMessage(widget.message).then((value) {
+                        // for hiding  bottom sheet
+                        Navigator.pop(context);
+                      });
+                    }),
 
               // separator
               if (isMe)
@@ -260,7 +275,8 @@ class _MessageCardState extends State<MessageCard> {
                     Icons.remove_red_eye,
                     color: Colors.blue,
                   ),
-                  name: 'Sent At: ',
+                  name:
+                      'Sent At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.sent)}',
                   onTap: () {}),
               // read time
               _OptionItem(
@@ -268,7 +284,9 @@ class _MessageCardState extends State<MessageCard> {
                     Icons.remove_red_eye,
                     color: Colors.lightGreen,
                   ),
-                  name: 'Read At: ',
+                  name: widget.message.read.isEmpty
+                      ? 'Read At: Not seen yet'
+                      : 'Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read)}',
                   onTap: () {}),
 
               // buttons
