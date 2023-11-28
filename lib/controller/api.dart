@@ -1,4 +1,5 @@
 // ignore_for_file: file_names, avoid_print
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../model/chat_user.dart';
 import '../model/message.dart';
+import 'package:http/http.dart' as http;
 
 class API {
   // for authentication
@@ -24,6 +26,7 @@ class API {
 
   // for getting firebase messaging token
   static Future<void> getFirebaseMessagingToken() async {
+    // Request permission
     NotificationSettings settings = await fMessaging.requestPermission(
       alert: true,
       announcement: true,
@@ -34,12 +37,37 @@ class API {
       sound: true,
     );
     log('User granted permission: ${settings.authorizationStatus}');
+    // get push token
     await fMessaging.getToken().then((t) {
       if (t != null) {
         me.pushToken = t;
         log('Push Token: $t');
       }
     });
+  }
+
+  // for sending push notifications
+  static Future<void> sendPushNotifications(
+      ChatUser chatUser, String msg) async {
+    try {
+      final body = {
+        "to": chatUser.pushToken,
+        "notification": {"title": chatUser.name, "body": msg}
+      };
+
+      var response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAAfv393jU:APA91bGswPJx7mdyAgxSJH1W_qO-uxshvJYb1kAyJqCbvnPtj7I3XvKnwtbWECoDyFGIoePlzVleOsgEhC8JftHYPnO0spYH4c8cKoLVMgO8Qy1ycI7akLQcLdMQcZruueXd35Xf2RBR',
+              },
+              body: jsonEncode(body));
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+    } catch (e) {
+      log('\nsendPushNotification Error: $e');
+    }
   }
 
   // check if the user exists or not
@@ -177,7 +205,9 @@ class API {
 
     final ref = firestore
         .collection('chats/${getConversationID(chatUser.id)}/messages/');
-    await ref.doc(time).set(message.toJson());
+    await ref.doc(time).set(message.toJson()).then((value) =>
+        sendPushNotifications(
+            chatUser, type == Type.text ? msg : 'sent a photo'));
   }
 
   // update read status of message
