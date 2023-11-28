@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, unnecessary_string_interpolations, unrelated_type_equality_checks
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver_updated/gallery_saver.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wechat/utils/my_date_util.dart';
@@ -225,7 +225,23 @@ class _MessageCardState extends State<MessageCard> {
                         size: 26,
                       ),
                       name: 'Save Image',
-                      onTap: () {}),
+                      onTap: () async {
+                        try {
+                          log('Image Url: ${widget.message.msg}');
+                          await GallerySaver.saveImage(widget.message.msg,
+                                  albumName: 'WeChat')
+                              .then((success) {
+                            // for hiding bottom sheet
+                            Navigator.pop(context);
+                            if (success != null && success) {
+                              Dialogs.showSnackBarUpdate(
+                                  context, 'Image saved successfully');
+                            }
+                          });
+                        } catch (e) {
+                          log('Error while saving image: $e');
+                        }
+                      }),
 
               // separator
               Divider(
@@ -243,7 +259,11 @@ class _MessageCardState extends State<MessageCard> {
                       size: 26,
                     ),
                     name: 'Edit Message',
-                    onTap: () {}),
+                    onTap: () {
+                      // for hiding  bottom sheet
+                      Navigator.pop(context);
+                      _showMessageUpdateDialog();
+                    }),
 
               // delete option
               if (isMe)
@@ -294,8 +314,80 @@ class _MessageCardState extends State<MessageCard> {
           );
         });
   }
+
+  // dialog for updating message content
+  void _showMessageUpdateDialog() {
+    String updateMsg = widget.message.msg;
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              contentPadding:
+                  EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+              // title
+              title: Row(
+                children: const [
+                  Icon(
+                    Icons.message,
+                    color: Colors.blue,
+                    size: 28,
+                  ),
+                  Text(
+                    'Update Message',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              // content
+              content: TextFormField(
+                initialValue: updateMsg,
+                maxLines: null,
+                onChanged: (value) => updateMsg = value,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+              // actions
+              actions: [
+                // update button
+                MaterialButton(
+                  onPressed: () {
+                    // hide alert dialog
+                    Navigator.pop(context);
+                    API.updateMessage(widget.message, updateMsg);
+                  },
+                  child: Text(
+                    'Update',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                // cancel button
+                MaterialButton(
+                  onPressed: () {
+                    // hide alert dialog
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ));
+  }
 }
 
+// Custom option card (for copy, edit, delete, etc.)
 class _OptionItem extends StatelessWidget {
   final Icon icon;
   final String name;

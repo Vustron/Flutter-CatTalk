@@ -32,7 +32,6 @@ dependencies:
   provider: ^6.1.1
   country_code_picker: ^3.0.0
   url_launcher: ^6.2.1
-  google_fonts: ^6.1.0
   flutter_launcher_icons: ^0.13.1
   flutter_spinkit: ^5.2.0
   cached_network_image: ^3.3.0
@@ -40,6 +39,7 @@ dependencies:
   emoji_picker_flutter: ^1.6.3
   http: ^1.1.2
   flutter_notification_channel: ^2.0.0
+  gallery_saver_updated: ^3.0.0
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5
