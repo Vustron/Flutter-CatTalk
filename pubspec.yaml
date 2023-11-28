@@ -40,6 +40,7 @@ dependencies:
   http: ^1.1.2
   flutter_notification_channel: ^2.0.0
   gallery_saver_updated: ^3.0.0
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5

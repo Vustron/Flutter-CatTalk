@@ -8,6 +8,7 @@ import 'package:wechat/utils/dialogs/dialog.dart';
 import '../../controller/API.dart';
 import '../../controller/googleAuth.dart';
 import '../home_screen.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,18 +35,57 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text("Welcome to WeChat"),
-        ),
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   title: const Text("Welcome to WeChat"),
+        // ),
         body: Stack(children: [
-          // App Logo
+          // app logo
           AnimatedPositioned(
               top: _isAnimate ? mq.height * .15 : -mq.width * .5,
               right: mq.width * .25,
               width: mq.width * .5,
               duration: const Duration(seconds: 1),
               child: Image.asset('assets/images/icon.png')),
+
+          // app name
+          Positioned(
+            bottom: mq.height * .38,
+            width: mq.width,
+            // duration: const Duration(seconds: 1),
+            child: Center(
+              child: Column(
+                children: [
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      WavyAnimatedText(
+                        'Welcome to',
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        speed: const Duration(milliseconds: 70),
+                      ),
+                    ],
+                  ),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      ColorizeAnimatedText(
+                        'WeChat',
+                        textStyle: const TextStyle(
+                            fontSize: 50, fontWeight: FontWeight.w900),
+                        colors: [
+                          Colors.black,
+                          const Color.fromARGB(255, 68, 255, 196),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           // google login
           AnimatedPositioned(

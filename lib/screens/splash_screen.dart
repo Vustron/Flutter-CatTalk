@@ -11,6 +11,7 @@ import '../../controller/googleAuth.dart';
 import './home_screen.dart';
 import 'auth/login_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 // Splash screen
 class SplashScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 2000), () async {
+    Future.delayed(const Duration(milliseconds: 3000), () async {
       // Exit full-screen
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -66,26 +67,38 @@ class _SplashScreenState extends State<SplashScreen> {
           bottom: mq.height * .28,
           width: mq.width,
           // duration: const Duration(seconds: 1),
-          child: const Center(
+          child: Center(
             child: Column(
               children: [
-                Text(
-                  'WeChat',
-                  style: TextStyle(
-                      fontSize: 50,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      'WeChat',
+                      textStyle: const TextStyle(
+                          fontSize: 50, fontWeight: FontWeight.w900),
+                      colors: [
+                        Colors.black,
+                        const Color.fromARGB(255, 68, 255, 196),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  'Made by Vustron Vustronus',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    WavyAnimatedText(
+                      'Made by Vustron Vustronus',
+                      textStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      speed: const Duration(milliseconds: 70),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 30),
-                SpinKitThreeBounce(
-                  color: Colors.black,
+                const SizedBox(height: 30),
+                const SpinKitThreeBounce(
+                  color: Color.fromARGB(255, 68, 255, 196),
                   size: 50.0,
                 ),
               ],
