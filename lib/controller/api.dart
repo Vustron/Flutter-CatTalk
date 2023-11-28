@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../model/chat_user.dart';
 import '../model/message.dart';
 
@@ -18,6 +19,28 @@ class API {
   static late ChatUser me;
   // to return current user
   static User get user => auth.currentUser!;
+  // for accessing firebase messaging (Push Notifications)
+  static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+
+  // for getting firebase messaging token
+  static Future<void> getFirebaseMessagingToken() async {
+    NotificationSettings settings = await fMessaging.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    log('User granted permission: ${settings.authorizationStatus}');
+    await fMessaging.getToken().then((t) {
+      if (t != null) {
+        me.pushToken = t;
+        log('Push Token: $t');
+      }
+    });
+  }
 
   // check if the user exists or not
   static Future<bool> userExists() async {
@@ -26,10 +49,13 @@ class API {
 
   // check if the user exists or not
   static Future<void> getSelfInfo() async {
-    await firestore.collection('users').doc(user.uid).get().then((user) {
+    await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        print('My Data: ${user.data()}');
+        await getFirebaseMessagingToken();
+        // for setting user status to active
+        API.updateActiveStatus(true);
+        log('My Data: ${user.data()}');
       } else {
         createUser().then((value) => getSelfInfo());
       }
@@ -114,7 +140,8 @@ class API {
   static Future<void> updateActiveStatus(bool isOnline) async {
     firestore.collection('users').doc(user.uid).update({
       'is_online': isOnline,
-      'last_active': DateTime.now().millisecondsSinceEpoch.toString()
+      'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
+      'push_token': me.pushToken,
     });
   }
 
