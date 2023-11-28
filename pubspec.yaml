@@ -39,6 +39,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   emoji_picker_flutter: ^1.6.3
   http: ^1.1.2
+  flutter_notification_channel: ^2.0.0
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5
