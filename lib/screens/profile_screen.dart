@@ -12,7 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
 import '../controller/api.dart';
-import '../utils/dialog.dart';
+import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
 
 // Profile Screen

@@ -13,7 +13,7 @@ import 'package:wechat/utils/my_date_util.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
 import '../controller/api.dart';
-import '../utils/dialog.dart';
+import '../utils/dialogs/dialog.dart';
 
 // Profile Screen
 class ViewProfileScreen extends StatefulWidget {

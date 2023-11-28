@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
-import 'package:wechat/utils/dialog.dart';
+import 'package:wechat/utils/dialogs/dialog.dart';
 import '../../controller/API.dart';
 import '../../controller/googleAuth.dart';
 import './home_screen.dart';

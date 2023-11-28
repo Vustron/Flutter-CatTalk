@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:wechat/utils/dialogs/profile_dialog.dart';
 import 'package:wechat/utils/my_date_util.dart';
 import '../controller/api.dart';
 import '../main.dart';
@@ -46,17 +47,24 @@ class _ChatUserCardState extends State<ChatUserCard> {
               }
               return ListTile(
                   // User profile picture
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .1),
-                    child: CachedNetworkImage(
-                      width: mq.height * .055,
-                      height: mq.height * .055,
-                      fit: BoxFit.fill,
-                      imageUrl: widget.user.image,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => CircleAvatar(
-                        child: Icon(Icons.person),
+                  leading: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => ProfileDialog(user: widget.user));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(mq.height * .1),
+                      child: CachedNetworkImage(
+                        width: mq.height * .055,
+                        height: mq.height * .055,
+                        fit: BoxFit.fill,
+                        imageUrl: widget.user.image,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
                       ),
                     ),
                   ),
