@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wechat/utils/dialogs/profile_dialog.dart';
@@ -24,6 +25,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Color.fromARGB(255, 68, 255, 196),
       margin: EdgeInsets.symmetric(horizontal: mq.width * .04, vertical: 4),
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -31,9 +33,12 @@ class _ChatUserCardState extends State<ChatUserCard> {
           onTap: () {
             // Navigating to chat screen
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ChatScreen(user: widget.user)));
+              context,
+              PageTransition(
+                type: PageTransitionType.topToBottom,
+                child: ChatScreen(user: widget.user),
+              ),
+            );
           },
           child: StreamBuilder(
             stream: API.getLastMessage(widget.user),
@@ -74,6 +79,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
+                      color: Colors.white,
                     ),
                   ),
                   // Last message
@@ -86,6 +92,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 12,
+                      color: Colors.white,
                     ),
                   ),
                   // Last message time
@@ -109,7 +116,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                               MyDateUtil.getLastMessageTime(
                                   context: context, time: _message!.sent),
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 10,
                               ),
                             ));

@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/model/chat_user.dart';
 import '../utils/chatUserCard.dart';
@@ -16,6 +16,7 @@ import '../controller/api.dart';
 import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
 import 'profile_screen.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 // Home Screen
 class HomeScreen extends StatefulWidget {
@@ -25,17 +26,23 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // For storing all users
   List<ChatUser> _list = [];
   // for storing search items
   final List<ChatUser> _searchList = [];
   // for storing search status
   bool _isSearching = false;
+  // for animations
+  late AnimationController _dialogController;
 
   @override
   void initState() {
     super.initState();
+    _dialogController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500), // Adjust the duration as needed
+    );
     API.getSelfInfo();
 
     // for updating user active status according to lifecycle events
@@ -55,6 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return Future.value(message);
     });
+  }
+
+  @override
+  void dispose() {
+    _dialogController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,9 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: SafeArea(
           child: Scaffold(
+            backgroundColor: Color.fromARGB(255, 215, 245, 246),
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              leading: const Icon(CupertinoIcons.home),
+              // leading: const Icon(CupertinoIcons.home),
+              automaticallyImplyLeading: false,
               title: _isSearching
                   ? TextField(
                       autofocus: true,
@@ -131,10 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ProfileScreen(user: API.me),
-                        ));
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.leftToRightWithFade,
+                        child: ProfileScreen(user: API.me),
+                      ),
+                    );
                   },
                   icon: const Icon(Icons.more_vert),
                 ),
@@ -240,79 +257,101 @@ class _HomeScreenState extends State<HomeScreen> {
     String email = '';
 
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding:
-                  EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
-              // title
-              title: Row(
-                children: const [
-                  Icon(
-                    Icons.person_add,
-                    color: Colors.green,
-                    size: 28,
-                  ),
-                  Text(
-                    ' Add User',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-              // content
-              content: TextFormField(
-                maxLines: null,
-                onChanged: (value) => email = value,
-                decoration: InputDecoration(
-                  hintText: 'Email Id',
-                  prefixIcon: const Icon(
-                    Icons.email,
-                    color: Colors.blue,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Color.fromARGB(255, 68, 255, 196),
+            // title
+            title: Row(
+              children: const [
+                Icon(
+                  Icons.person_add,
+                  color: Colors.white,
+                  size: 28,
                 ),
-              ),
-              // actions
-              actions: [
-                // add button
-                MaterialButton(
-                  onPressed: () async {
-                    // hide alert dialog
-                    Navigator.pop(context);
-                    if (email.isNotEmpty) {
-                      await API.addChatUser(email).then((value) {
-                        if (!value) {
-                          Dialogs.showSnackBar(context, 'User does not exist');
-                        }
-                      });
-                    }
-                  },
-                  child: Text(
-                    'Add',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                // cancel button
-                MaterialButton(
-                  onPressed: () {
-                    // hide alert dialog
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                    ),
-                  ),
+                Text(
+                  ' Add User',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ],
-            ));
+            ),
+            // content
+            content: TextFormField(
+              maxLines: null,
+              onChanged: (value) => email = value,
+              decoration: InputDecoration(
+                hintText: 'Email Id',
+                hintStyle: TextStyle(color: Colors.white),
+                prefixIcon: const Icon(
+                  Icons.email,
+                  color: Colors.white,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
+            ),
+
+            // actions
+            actions: [
+              // add button
+              MaterialButton(
+                onPressed: () async {
+                  // hide alert dialog
+                  Navigator.pop(context);
+                  if (email.isNotEmpty) {
+                    await API.addChatUser(email).then((value) {
+                      if (!value) {
+                        Dialogs.showSnackBar(context, 'User does not exist');
+                      }
+                    });
+                  }
+                },
+                child: Text(
+                  'Add',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              // cancel button
+              MaterialButton(
+                onPressed: () {
+                  _dialogController.reverse();
+                  // hide alert dialog
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    // Start the animation when the dialog is displayed
+    _dialogController.forward();
   }
 }

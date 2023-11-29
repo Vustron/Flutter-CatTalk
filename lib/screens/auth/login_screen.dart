@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
 import 'package:wechat/utils/dialogs/dialog.dart';
@@ -104,15 +105,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (await API.userExists()) {
                       Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const HomeScreen(),
+                          PageTransition(
+                            type: PageTransitionType.bottomToTop,
+                            child: const HomeScreen(),
                           ));
                     } else {
                       await API.createUser().then((value) {
                         Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => const HomeScreen(),
+                            PageTransition(
+                              type: PageTransitionType.bottomToTop,
+                              child: const HomeScreen(),
                             ));
                       });
                     }

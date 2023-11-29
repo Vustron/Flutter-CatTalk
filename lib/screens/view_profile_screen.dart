@@ -33,8 +33,15 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 215, 245, 246),
           resizeToAvoidBottomInset: false,
-          appBar: AppBar(title: Text(widget.user.name)),
+          appBar: AppBar(
+              title: Text(
+            widget.user.name,
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          )),
           floatingActionButton: // User About
               Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +73,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               child: Column(
                 children: [
                   // Space
-                  SizedBox(width: mq.width, height: mq.height * .03),
+                  SizedBox(width: mq.width, height: mq.height * .14),
                   // user profile picture
                   ClipRRect(
                     borderRadius: BorderRadius.circular(mq.height * .1),

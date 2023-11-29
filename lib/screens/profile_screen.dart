@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -36,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 215, 245, 246),
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text("Profile"),
@@ -64,8 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Replacing home screen with login screen
                   Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const LoginScreen(),
+                      PageTransition(
+                        type: PageTransitionType.topToBottom,
+                        child: const LoginScreen(),
                       ));
                 });
               },
@@ -135,10 +138,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _showBottomSheet();
                             },
                             shape: const CircleBorder(),
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 68, 255, 196),
                             child: Icon(
                               Icons.edit,
-                              color: Colors.blue,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -166,12 +169,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.person,
-                          color: Colors.purple,
+                          color: Color.fromARGB(255, 68, 255, 196),
                         ),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 68, 255, 196)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 68, 255, 196)),
                         ),
                         hintText: 'eg. John Doe',
                         labelText: 'Name',
@@ -189,12 +199,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.info_outline,
-                          color: Colors.purple,
+                          color: Color.fromARGB(255, 68, 255, 196),
                         ),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 68, 255, 196)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 68, 255, 196)),
                         ),
                         hintText: 'eg. Feeling Happy',
                         labelText: 'About',
@@ -214,16 +231,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       icon: Icon(
                         Icons.edit,
+                        color: Colors.white,
                         size: 28,
                       ),
                       label: const Text(
                         'Update',
                         style: TextStyle(
                           fontSize: 16,
+                          color: Colors.white,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         shape: const StadiumBorder(),
+                        backgroundColor: Color.fromARGB(255, 68, 255, 196),
                         minimumSize: Size(mq.width * .5, mq.height * .06),
                       ),
                     ),

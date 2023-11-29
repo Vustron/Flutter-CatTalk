@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat/main.dart';
 import 'package:wechat/utils/dialogs/dialog.dart';
@@ -32,15 +33,25 @@ class _SplashScreenState extends State<SplashScreen> {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.black,
-        statusBarColor: Colors.black,
+        statusBarColor: Colors.white,
       ));
       if (API.auth.currentUser != null) {
         log('\nUser: ${API.auth.currentUser}');
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+            context,
+            PageTransition(
+              type: PageTransitionType.size,
+              alignment: Alignment.bottomCenter,
+              child: const HomeScreen(),
+            ));
       } else {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+            context,
+            PageTransition(
+              type: PageTransitionType.size,
+              alignment: Alignment.bottomCenter,
+              child: const LoginScreen(),
+            ));
       }
     });
   }
