@@ -27,12 +27,13 @@ class ProfileDialog extends StatelessWidget {
             // User profile picture
             Positioned(
               top: mq.height * .040,
-              left: mq.width * .13,
+              left: mq.width * .14,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(mq.height * .25),
                 child: CachedNetworkImage(
-                  width: mq.width * .5,
-                  fit: BoxFit.fill,
+                  width: mq.height * .22,
+                  height: mq.height * .22,
+                  fit: BoxFit.cover,
                   imageUrl: user.image,
                   placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) => CircleAvatar(
@@ -82,6 +83,34 @@ class ProfileDialog extends StatelessWidget {
                     size: 30,
                   )),
             ),
+            // user status
+            user.isOnline
+                ? Positioned(
+                    top: 90,
+                    bottom: 0,
+                    right: 70,
+                    width: 40,
+                    child: MaterialButton(
+                      onPressed: () {
+                        // Add your onPressed logic here
+                      },
+                      shape: CircleBorder(),
+                      color: Colors.lightGreenAccent,
+                    ),
+                  )
+                : Positioned(
+                    top: 90,
+                    bottom: 0,
+                    right: 70,
+                    width: 40,
+                    child: MaterialButton(
+                      onPressed: () {
+                        // Add your onPressed logic here
+                      },
+                      shape: CircleBorder(),
+                      color: Colors.grey,
+                    ),
+                  ),
           ],
         ),
       ),

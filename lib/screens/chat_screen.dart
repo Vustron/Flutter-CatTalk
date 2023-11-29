@@ -6,6 +6,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:wechat/controller/api.dart';
 import 'package:wechat/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -172,8 +173,9 @@ class _ChatScreenState extends State<ChatScreen> {
       onTap: () {
         Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (_) => ViewProfileScreen(user: widget.user)));
+            PageTransition(
+                type: PageTransitionType.leftToRightWithFade,
+                child: ViewProfileScreen(user: widget.user)));
       },
       child: Padding(
           padding: const EdgeInsets.only(top: 1),
@@ -196,20 +198,53 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     // User profile picture
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: CachedNetworkImage(
-                        width: mq.height * .06,
-                        height: mq.height * .06,
-                        fit: BoxFit.fill,
-                        imageUrl:
-                            list.isNotEmpty ? list[0].image : widget.user.image,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => CircleAvatar(
-                          child: Icon(Icons.person),
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: CachedNetworkImage(
+                            width: mq.height * .06,
+                            height: mq.height * .06,
+                            fit: BoxFit.fill,
+                            imageUrl: list.isNotEmpty
+                                ? list[0].image
+                                : widget.user.image,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => CircleAvatar(
+                              child: Icon(Icons.person),
+                            ),
+                          ),
                         ),
-                      ),
+                        // user status
+                        widget.user.isOnline
+                            ? Positioned(
+                                top: 30,
+                                bottom: 0,
+                                right: 1,
+                                width: 12,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    // Add your onPressed logic here
+                                  },
+                                  shape: CircleBorder(),
+                                  color: Colors.lightGreenAccent,
+                                ),
+                              )
+                            : Positioned(
+                                top: 30,
+                                bottom: 0,
+                                right: 1,
+                                width: 12,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    // Add your onPressed logic here
+                                  },
+                                  shape: CircleBorder(),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                      ],
                     ),
                     // for adding space
                     const SizedBox(width: 10),
@@ -273,6 +308,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                       child: TextField(
                     controller: _textController,
+                    style: TextStyle(color: Colors.white),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     onTap: () {

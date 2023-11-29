@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers
 import 'dart:convert';
 import 'dart:developer';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +40,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    // dialog control animation
     _dialogController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500), // Adjust the duration as needed
     );
+
+    // get self info
     API.getSelfInfo();
 
     // for updating user active status according to lifecycle events
@@ -87,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             });
             return Future.value(false);
           } else {
-            return Future.value(true);
+            return Future.value(false);
           }
         },
         child: SafeArea(
@@ -129,7 +134,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         }
                       },
                     )
-                  : Text("WeChat"),
+                  : AnimatedTextKit(
+                      animatedTexts: [
+                        WavyAnimatedText(
+                          'WeChat',
+                          textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w900,
+                          ),
+                          speed: const Duration(milliseconds: 100),
+                        ),
+                      ],
+                    ),
               actions: [
                 IconButton(
                   onPressed: () async {
@@ -153,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(Icons.person_outline_outlined),
                 ),
               ],
             ),
@@ -286,10 +303,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ],
             ),
+
             // content
             content: TextFormField(
               maxLines: null,
               onChanged: (value) => email = value,
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Email Id',
                 hintStyle: TextStyle(color: Colors.white),
@@ -321,6 +340,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         Dialogs.showSnackBar(context, 'User does not exist');
                       }
                     });
+                  } else {
+                    Dialogs.showSnackBar(context, 'Please input an email');
                   }
                 },
                 child: Text(

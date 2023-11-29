@@ -58,19 +58,51 @@ class _ChatUserCardState extends State<ChatUserCard> {
                           context: context,
                           builder: (_) => ProfileDialog(user: widget.user));
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(mq.height * .1),
-                      child: CachedNetworkImage(
-                        width: mq.height * .055,
-                        height: mq.height * .055,
-                        fit: BoxFit.fill,
-                        imageUrl: widget.user.image,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => CircleAvatar(
-                          child: Icon(Icons.person),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(mq.height * 0.1),
+                          child: CachedNetworkImage(
+                            width: mq.height * 0.055,
+                            height: mq.height * 0.055,
+                            fit: BoxFit.fill,
+                            imageUrl: widget.user.image,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => CircleAvatar(
+                              child: Icon(Icons.person),
+                            ),
+                          ),
                         ),
-                      ),
+                        // user status
+                        widget.user.isOnline
+                            ? Positioned(
+                                top: 30,
+                                bottom: 0,
+                                right: 1,
+                                width: 10,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    // Add your onPressed logic here
+                                  },
+                                  shape: CircleBorder(),
+                                  color: Colors.lightGreenAccent,
+                                ),
+                              )
+                            : Positioned(
+                                top: 30,
+                                bottom: 0,
+                                right: 1,
+                                width: 10,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    // Add your onPressed logic here
+                                  },
+                                  shape: CircleBorder(),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                      ],
                     ),
                   ),
                   // User name

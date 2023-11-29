@@ -75,19 +75,23 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   // Space
                   SizedBox(width: mq.width, height: mq.height * .14),
                   // user profile picture
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .1),
-                    child: CachedNetworkImage(
-                      width: mq.height * .2,
-                      height: mq.height * .2,
-                      fit: BoxFit.fill,
-                      imageUrl: widget.user.image,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => CircleAvatar(
-                        child: Icon(Icons.person),
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(mq.height * .1),
+                        child: CachedNetworkImage(
+                          width: mq.height * .2,
+                          height: mq.height * .2,
+                          fit: BoxFit.fill,
+                          imageUrl: widget.user.image,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => CircleAvatar(
+                            child: Icon(Icons.person),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   // add space
                   SizedBox(height: mq.height * .03),

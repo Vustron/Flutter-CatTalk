@@ -50,9 +50,9 @@ class _MessageCardState extends State<MessageCard> {
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 221, 245, 255),
+              color: Colors.lightBlue[200],
               border: Border.all(
-                color: Colors.lightBlue,
+                color: Colors.blue,
               ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
@@ -66,7 +66,7 @@ class _MessageCardState extends State<MessageCard> {
                 Text(widget.message.msg,
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.black87,
+                      color: Colors.white,
                     ))
                 :
                 // show image
@@ -139,9 +139,9 @@ class _MessageCardState extends State<MessageCard> {
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 218, 255, 176),
+              color: Colors.lightGreen[200],
               border: Border.all(
-                color: Colors.lightGreen,
+                color: Colors.green,
               ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
@@ -155,7 +155,7 @@ class _MessageCardState extends State<MessageCard> {
                 Text(widget.message.msg,
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.black87,
+                      color: Colors.white,
                     ))
                 :
                 // show image
