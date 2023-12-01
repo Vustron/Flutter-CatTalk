@@ -2,17 +2,18 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:WeChat/screens/video_call_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:wechat/controller/api.dart';
-import 'package:wechat/model/chat_user.dart';
+import '/controller/api.dart';
+import '/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:wechat/model/message.dart';
-import 'package:wechat/screens/view_profile_screen.dart';
-import 'package:wechat/utils/my_date_util.dart';
+import '/model/message.dart';
+import '/screens/view_profile_screen.dart';
+import '/utils/my_date_util.dart';
 import '../main.dart';
 import '../utils/messageCard.dart';
 
@@ -57,6 +58,21 @@ class _ChatScreenState extends State<ChatScreen> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               flexibleSpace: _appBar(),
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    API.sendVideoCallPushNotification(widget.user);
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.leftToRightWithFade,
+                        child: VideoCallScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.video_call),
+                ),
+              ],
             ),
             backgroundColor: Color.fromARGB(255, 215, 245, 246),
             // body
@@ -246,8 +262,10 @@ class _ChatScreenState extends State<ChatScreen> {
                               ),
                       ],
                     ),
+
                     // for adding space
                     const SizedBox(width: 10),
+
                     // User Name
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,

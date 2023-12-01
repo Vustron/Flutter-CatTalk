@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void, depend_on_referenced_packages
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:wechat/main.dart';
-import 'package:wechat/utils/dialogs/dialog.dart';
+import '/main.dart';
+import '/utils/dialogs/dialog.dart';
 import '../../controller/API.dart';
 import '../../controller/googleAuth.dart';
 import '../home_screen.dart';

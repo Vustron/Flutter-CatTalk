@@ -32,7 +32,7 @@ class API {
       announcement: true,
       badge: true,
       carPlay: false,
-      criticalAlert: false,
+      criticalAlert: true,
       provisional: false,
       sound: true,
     );
@@ -65,8 +65,45 @@ class API {
           "title": me.name,
           "body": msg,
           "android_channel_id": "chats",
+          "sound": "default",
         },
         "data": {
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+          "some_data": "User ID: ${me.id}",
+        },
+        "priority": "high",
+        "content_available": true,
+      };
+
+      var response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAAfv393jU:APA91bGswPJx7mdyAgxSJH1W_qO-uxshvJYb1kAyJqCbvnPtj7I3XvKnwtbWECoDyFGIoePlzVleOsgEhC8JftHYPnO0spYH4c8cKoLVMgO8Qy1ycI7akLQcLdMQcZruueXd35Xf2RBR',
+              },
+              body: jsonEncode(body));
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+    } catch (e) {
+      log('\nsendPushNotification Error: $e');
+    }
+  }
+
+  // sending push notification
+  static Future<void> sendVideoCallPushNotification(
+    ChatUser chatUser,
+  ) async {
+    try {
+      final body = {
+        "to": chatUser.pushToken,
+        "notification": {
+          "title": me.name,
+          "body": 'Incoming Call from ${me.name}',
+          "android_channel_id": "chats",
+        },
+        "data": {
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
           "some_data": "User ID: ${me.id}",
         },
       };
@@ -74,7 +111,8 @@ class API {
       var response =
           await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
               headers: {
-                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.contentTypeHeader:
+                    'application/json; charset=UTF-8',
                 HttpHeaders.authorizationHeader:
                     'key=AAAAfv393jU:APA91bGswPJx7mdyAgxSJH1W_qO-uxshvJYb1kAyJqCbvnPtj7I3XvKnwtbWECoDyFGIoePlzVleOsgEhC8JftHYPnO0spYH4c8cKoLVMgO8Qy1ycI7akLQcLdMQcZruueXd35Xf2RBR',
               },

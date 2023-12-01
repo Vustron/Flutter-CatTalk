@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, use_build_context_synchronously, depend_on_referenced_packages
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -7,9 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:wechat/model/chat_user.dart';
+import '/model/chat_user.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:wechat/utils/my_date_util.dart';
+import '/utils/my_date_util.dart';
 import '../main.dart';
 import '../controller/googleAuth.dart';
 import '../controller/api.dart';

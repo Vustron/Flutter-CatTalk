@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:wechat/model/chat_user.dart';
+import '/model/chat_user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:wechat/utils/dialogs/profile_dialog.dart';
-import 'package:wechat/utils/my_date_util.dart';
+import '/utils/dialogs/profile_dialog.dart';
+import '/utils/my_date_util.dart';
 import '../controller/api.dart';
 import '../main.dart';
 import '../model/message.dart';

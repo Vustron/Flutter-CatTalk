@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:wechat/model/chat_user.dart';
+import '/model/chat_user.dart';
 import '../utils/chatUserCard.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../main.dart';
