@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, avoid_print
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,23 +35,33 @@ class API {
       provisional: false,
       sound: true,
     );
-    log('User granted permission: ${settings.authorizationStatus}');
+    print('User granted permission: ${settings.authorizationStatus}');
     // get push token
     await fMessaging.getToken().then((t) {
       if (t != null) {
         me.pushToken = t;
-        log('Push Token: $t');
+        print('Push Token: $t');
       }
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log('Got a message whilst in the foreground');
-      log('Message data: ${message.data}');
+      print('Got a message whilst in the foreground');
+      print('Message data: ${message.data}');
 
       if (message.notification != null) {
-        log('Message also contained a notification: ${message.notification}');
+        print('Message also contained a notification: ${message.notification}');
       }
     });
+
+    // Listen for messages in the background or terminated
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  // Background message handler
+  static Future<void> _firebaseMessagingBackgroundHandler(
+    RemoteMessage message,
+  ) async {
+    print("Handling a background message: ${message.messageId}");
   }
 
   // for sending push notifications
@@ -83,14 +92,14 @@ class API {
                     'key=AAAAfv393jU:APA91bGswPJx7mdyAgxSJH1W_qO-uxshvJYb1kAyJqCbvnPtj7I3XvKnwtbWECoDyFGIoePlzVleOsgEhC8JftHYPnO0spYH4c8cKoLVMgO8Qy1ycI7akLQcLdMQcZruueXd35Xf2RBR',
               },
               body: jsonEncode(body));
-      log('Response status: ${response.statusCode}');
-      log('Response body: ${response.body}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
     } catch (e) {
-      log('\nsendPushNotification Error: $e');
+      print('\nsendPushNotification Error: $e');
     }
   }
 
-  // sending push notification
+  // sending push notification for video calls
   static Future<void> sendVideoCallPushNotification(
     ChatUser chatUser,
   ) async {
@@ -117,10 +126,10 @@ class API {
                     'key=AAAAfv393jU:APA91bGswPJx7mdyAgxSJH1W_qO-uxshvJYb1kAyJqCbvnPtj7I3XvKnwtbWECoDyFGIoePlzVleOsgEhC8JftHYPnO0spYH4c8cKoLVMgO8Qy1ycI7akLQcLdMQcZruueXd35Xf2RBR',
               },
               body: jsonEncode(body));
-      log('Response status: ${response.statusCode}');
-      log('Response body: ${response.body}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
     } catch (e) {
-      log('\nsendPushNotification Error: $e');
+      print('\nsendPushNotification Error: $e');
     }
   }
 
@@ -136,12 +145,12 @@ class API {
         .where('email', isEqualTo: email)
         .get();
 
-    log('Data: ${data.docs}');
+    print('Data: ${data.docs}');
 
     if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
       // if user exists
 
-      log('User exists: ${data.docs.first.data()}');
+      print('User exists: ${data.docs.first.data()}');
 
       firestore
           .collection('users')
@@ -165,7 +174,7 @@ class API {
         await getFirebaseMessagingToken();
         // for setting user status to active
         API.updateActiveStatus(true);
-        log('My Data: ${user.data()}');
+        print('My Data: ${user.data()}');
       } else {
         createUser().then((value) => getSelfInfo());
       }
@@ -206,7 +215,7 @@ class API {
   // Get all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
       List<String> userIds) {
-    log('\nUserIds: $userIds');
+    print('\nUserIds: $userIds');
 
     return firestore
         .collection('users')
@@ -350,7 +359,7 @@ class API {
               contentType: 'image/$ext',
             ))
         .then((p0) {
-      log('Data transferred: ${p0.bytesTransferred / 1000} kb');
+      print('Data transferred: ${p0.bytesTransferred / 1000} kb');
     });
 
     // Updating image in firestore database

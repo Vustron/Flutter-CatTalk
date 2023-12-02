@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // resume = active or online
     // pause = inactive or offline
     SystemChannels.lifecycle.setMessageHandler((message) {
-      log('Message: $message');
+      print('Message: $message');
 
       if (API.auth.currentUser != null) {
         if (message.toString().contains('resume')) {

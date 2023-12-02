@@ -2,9 +2,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:WeChat/controller/facebookAuth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,12 @@ import '../controller/googleAuth.dart';
 import '../controller/api.dart';
 import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
+
+String prettyPrint(Map json) {
+  JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+  String pretty = encoder.convert(json);
+  return pretty;
+}
 
 // Profile Screen
 class ProfileScreen extends StatefulWidget {
@@ -53,9 +61,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await API.updateActiveStatus(false);
 
                 // Google provider and listener
-                final provider =
+                final googleprovider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
-                await provider.googleLogout().then((value) async {
+                // Facebook provider and Listener
+                final facebookprovider =
+                    Provider.of<FacebookSignInProvider>(context, listen: false);
+                await facebookprovider.facebookLogout().then((value) async {
+                  // for hiding progress dialog
+                  Navigator.pop(context);
+                  // for moving to home screen
+                  Navigator.pop(context);
+
+                  API.auth = FirebaseAuth.instance;
+
+                  // Replacing home screen with login screen
+                  Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.topToBottom,
+                        child: const LoginScreen(),
+                      ));
+                });
+                await googleprovider.googleLogout().then((value) async {
                   // for hiding progress dialog
                   Navigator.pop(context);
                   // for moving to home screen
@@ -295,9 +322,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _image = image.path;
                         });
 
-                        API.updateUserProfilePicture(File(_image!));
+                        await API.updateUserProfilePicture(File(_image!));
                         // for hiding bottom sheet
                         Navigator.pop(context);
+                        Dialogs.showSnackBarUpdate(
+                            context, 'Picture Updated Sucessfully');
                       }
                     },
                     child: Image.asset('assets/images/add_image.png'),
@@ -319,9 +348,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _image = image.path;
                         });
 
-                        API.updateUserProfilePicture(File(_image!));
+                        await API.updateUserProfilePicture(File(_image!));
                         // for hiding bottom sheet
                         Navigator.pop(context);
+                        Dialogs.showSnackBarUpdate(
+                            context, 'Picture Updated Sucessfully');
                       }
                     },
                     child: Image.asset('assets/images/camera.png'),

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void, depend_on_referenced_packages
 import 'dart:developer';
 
+import 'package:WeChat/controller/facebookAuth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // google login
           AnimatedPositioned(
             bottom: _isAnimate ? mq.height * 0.2 : -mq.width * .5,
-            left: mq.width * 0.17,
+            left: mq.width * 0.14,
             height: mq.height * 0.2,
             duration: const Duration(seconds: 1),
             child: Center(
@@ -126,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 68, 255, 196),
+                  backgroundColor: const Color.fromARGB(255, 255, 68, 68),
                   shape: const StadiumBorder(),
                   elevation: 1,
                 ),
@@ -144,7 +145,76 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       TextSpan(text: 'Login with '),
                       TextSpan(
-                        text: 'Google',
+                        text: 'Google    ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // facebook login
+          AnimatedPositioned(
+            bottom: _isAnimate ? mq.height * 0.1 : -mq.width * .5,
+            left: mq.width * 0.14,
+            height: mq.height * 0.2,
+            duration: const Duration(seconds: 1),
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  Dialogs.showProgressBar(context);
+                  try {
+                    final provider = Provider.of<FacebookSignInProvider>(
+                        context,
+                        listen: false);
+                    await provider.facebookLogin();
+                    if (await API.userExists()) {
+                      Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.bottomToTop,
+                            child: const HomeScreen(),
+                          ));
+                    } else {
+                      await API.createUser().then((value) {
+                        Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.bottomToTop,
+                              child: const HomeScreen(),
+                            ));
+                      });
+                    }
+                  } catch (error) {
+                    log('Error during Facebook login: $error');
+                    Dialogs.showSnackBar(
+                        context, 'Something went wrong (Check Internet)');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 68, 140, 255),
+                  shape: const StadiumBorder(),
+                  elevation: 1,
+                ),
+                icon: SizedBox(
+                  width: mq.height * 0.05,
+                  height: mq.height * 0.07,
+                  child: Image.asset('assets/images/facebook.png'),
+                ),
+                label: RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                    ),
+                    children: [
+                      TextSpan(text: 'Login with '),
+                      TextSpan(
+                        text: 'Facebook',
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                         ),

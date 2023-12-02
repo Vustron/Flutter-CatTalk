@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1413713712516348</string>
+    <string name="fb_login_protocol_scheme">fb1413713712516348</string>
+    <string name="facebook_client_token">df0b8a1728db425fdeabaec9aebe5749</string>
+    <string name="app_name">"Flutter-WeChat"</string>
+
+</resources>

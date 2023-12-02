@@ -46,6 +46,7 @@ dependencies:
   awesome_snackbar_content: ^0.1.3
   agora_uikit: ^1.3.7
   agora_rtc_engine: ^6.2.6
+  flutter_facebook_auth: ^6.0.3
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5

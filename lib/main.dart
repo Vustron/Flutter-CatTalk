@@ -9,6 +9,7 @@ import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:provider/provider.dart';
+import 'controller/facebookAuth.dart';
 import 'controller/googleAuth.dart';
 import 'screens/splash_screen.dart';
 import 'services/firebase_options.dart';
@@ -39,6 +40,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
+            ChangeNotifierProvider(create: (_) => FacebookSignInProvider()),
           ],
           child: MaterialApp(
             title: 'We Chat',
