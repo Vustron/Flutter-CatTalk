@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace
 import 'dart:convert';
 import 'dart:developer';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -17,6 +17,7 @@ import '../controller/googleAuth.dart';
 import '../controller/api.dart';
 import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
+import 'chatUserAvatar.dart';
 import 'profile_screen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -93,16 +94,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               _isSearching = !_isSearching;
             });
             return Future.value(false);
-          } else {
-            return Future.value(false);
           }
+          return Future.value(false);
         },
         child: SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white70,
+            backgroundColor: Color.fromARGB(255, 68, 255, 196),
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               // leading: const Icon(CupertinoIcons.home),
+              backgroundColor: const Color.fromARGB(255, 68, 255, 196),
               automaticallyImplyLeading: false,
               title: _isSearching
                   ? TextField(
@@ -165,17 +166,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         : Icons.search,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.leftToRightWithFade,
-                        child: ProfileScreen(user: API.me),
+                Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.leftToRightWithFade,
+                          child: ProfileScreen(user: API.me),
+                        ),
+                      );
+                    },
+                    icon: ClipRRect(
+                      borderRadius: BorderRadius.circular(mq.height * .1),
+                      child: CachedNetworkImage(
+                        width: mq.height * .04,
+                        height: mq.height * .04,
+                        fit: BoxFit.fill,
+                        imageUrl: API.me.image,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.person_outline_outlined),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -241,19 +258,65 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   [];
 
                               if (_list.isNotEmpty) {
-                                return ListView.builder(
-                                    itemCount: _isSearching
-                                        ? _searchList.length
-                                        : _list.length,
-                                    padding:
-                                        EdgeInsets.only(top: mq.height * .01),
-                                    physics: const BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return ChatUserCard(
-                                          user: _isSearching
-                                              ? _searchList[index]
-                                              : _list[index]);
-                                    });
+                                return Column(
+                                  children: [
+                                    Container(
+                                      height: 76,
+                                      width: 340,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(25),
+                                          topRight: Radius.circular(25),
+                                          bottomLeft: Radius.circular(25),
+                                          bottomRight: Radius.circular(25),
+                                        ),
+                                      ),
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: _isSearching
+                                            ? _searchList.length
+                                            : _list.length,
+                                        padding: EdgeInsets.only(
+                                            top: mq.height * .01),
+                                        physics: const BouncingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return ChatUserAvatar(
+                                              user: _isSearching
+                                                  ? _searchList[index]
+                                                  : _list[index]);
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Container(
+                                      height: 576,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(25),
+                                          topRight: Radius.circular(25),
+                                        ),
+                                      ),
+                                      child: ListView.builder(
+                                        itemCount: _isSearching
+                                            ? _searchList.length
+                                            : _list.length,
+                                        padding: EdgeInsets.only(
+                                            top: mq.height * .01),
+                                        physics: const BouncingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            child: ChatUserCard(
+                                                user: _isSearching
+                                                    ? _searchList[index]
+                                                    : _list[index]),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
                               } else {
                                 return const Center(
                                     child: Text(
@@ -293,18 +356,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: AlertDialog(
             contentPadding:
                 EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
-            backgroundColor: Color.fromARGB(255, 68, 255, 196),
+            backgroundColor: Colors.white,
             // title
             title: Row(
               children: const [
                 Icon(
                   Icons.person_add,
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 68, 255, 196),
                   size: 28,
                 ),
                 Text(
                   ' Add User',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
               ],
             ),
@@ -313,21 +376,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             content: TextFormField(
               maxLines: null,
               onChanged: (value) => email = value,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 hintText: 'Email Id',
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.black),
                 prefixIcon: const Icon(
                   Icons.email,
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 68, 255, 196),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 68, 255, 196)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 68, 255, 196)),
                 ),
               ),
             ),
@@ -352,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Text(
                   'Add',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.green,
                     fontSize: 16,
                   ),
                 ),
@@ -367,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.red,
                     fontSize: 16,
                   ),
                 ),

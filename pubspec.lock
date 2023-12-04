@@ -289,6 +289,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: "4e42aacde3b993c5947467ab640882c56947d9d27342a5b6f2895b23956954a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.1"
   file_selector_linux:
     dependency: transitive
     description:
@@ -1186,14 +1194,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  swipe_to:
-    dependency: "direct main"
-    description:
-      name: swipe_to
-      sha256: cb4d749e46cea268eca14f7160f80db2328470fe1f7d547960db837f55b6691f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:

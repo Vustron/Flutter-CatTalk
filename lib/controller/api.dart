@@ -269,6 +269,32 @@ class API {
     });
   }
 
+  // for sending files
+  static Future<void> uploadFiles(ChatUser chatUser, File file) async {
+    // Getting file extension
+    final ext = file.path.split('.').last;
+    print('Extension: $ext');
+
+    // storage file ref with path
+    final ref = storage.ref().child(
+        'uploads/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    // uploading file
+    await ref
+        .putFile(
+            file,
+            SettableMetadata(
+              contentType: 'file/$ext',
+            ))
+        .then((p0) {
+      print('Data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+
+    // Updating image in firestore database
+    final fileURL = await ref.getDownloadURL();
+    await sendMessage(chatUser, fileURL, Type.file);
+  }
+
   // for getting specific user info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {
@@ -375,6 +401,8 @@ class API {
         .delete();
 
     if (message.type == Type.image) {
+      await storage.refFromURL(message.msg).delete();
+    } else if (message.type == Type.file) {
       await storage.refFromURL(message.msg).delete();
     }
   }

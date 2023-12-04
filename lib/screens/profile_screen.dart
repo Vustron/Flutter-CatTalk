@@ -6,6 +6,7 @@ import 'package:WeChat/controller/facebookAuth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -17,12 +18,6 @@ import '../controller/googleAuth.dart';
 import '../controller/api.dart';
 import '../utils/dialogs/dialog.dart';
 import 'auth/login_screen.dart';
-
-String prettyPrint(Map json) {
-  JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-  String pretty = encoder.convert(json);
-  return pretty;
-}
 
 // Profile Screen
 class ProfileScreen extends StatefulWidget {
@@ -45,46 +40,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Color.fromARGB(255, 215, 245, 246),
+          backgroundColor: Colors.white,
           resizeToAvoidBottomInset: false,
+
+          //title
           appBar: AppBar(
             title: const Text("Profile"),
           ),
+
           // Logout Button
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton.extended(
               onPressed: () async {
-                // showing progress
-                Dialogs.showProgressBar(context);
+                // for showing progress
+                EasyLoading.show(status: 'loading...');
 
                 await API.updateActiveStatus(false);
 
                 // Google provider and listener
                 final googleprovider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
-                // Facebook provider and Listener
-                final facebookprovider =
-                    Provider.of<FacebookSignInProvider>(context, listen: false);
-                await facebookprovider.facebookLogout().then((value) async {
-                  // for hiding progress dialog
-                  Navigator.pop(context);
-                  // for moving to home screen
-                  Navigator.pop(context);
 
-                  API.auth = FirebaseAuth.instance;
-
-                  // Replacing home screen with login screen
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.topToBottom,
-                        child: const LoginScreen(),
-                      ));
-                });
                 await googleprovider.googleLogout().then((value) async {
-                  // for hiding progress dialog
-                  Navigator.pop(context);
                   // for moving to home screen
                   Navigator.pop(context);
 
@@ -97,7 +75,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         type: PageTransitionType.topToBottom,
                         child: const LoginScreen(),
                       ));
+                  EasyLoading.dismiss();
                 });
+
+                // Facebook provider and Listener
+                // final facebookprovider =
+                //     Provider.of<FacebookSignInProvider>(context, listen: false);
+
+                // await facebookprovider.facebookLogout().then((value) async {
+                //   // for hiding progress dialog
+                //   Navigator.pop(context);
+                //   // for moving to home screen
+                //   Navigator.pop(context);
+
+                //   API.auth = FirebaseAuth.instance;
+
+                //   // Replacing home screen with login screen
+                //   Navigator.pushReplacement(
+                //       context,
+                //       PageTransition(
+                //         type: PageTransitionType.topToBottom,
+                //         child: const LoginScreen(),
+                //       ));
+                // });
               },
               icon: const Icon(
                 Icons.logout,
@@ -112,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               backgroundColor: Colors.redAccent,
             ),
           ),
+
           body: Form(
             key: _formKey,
             child: Padding(
@@ -317,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final XFile? image = await picker.pickImage(
                           source: ImageSource.gallery, imageQuality: 80);
                       if (image != null) {
-                        log('Image Path: ${image.path}');
+                        print('Image Path: ${image.path}');
                         setState(() {
                           _image = image.path;
                         });
@@ -343,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final XFile? image = await picker.pickImage(
                           source: ImageSource.camera, imageQuality: 80);
                       if (image != null) {
-                        log('Image Path: ${image.path}');
+                        print('Image Path: ${image.path}');
                         setState(() {
                           _image = image.path;
                         });

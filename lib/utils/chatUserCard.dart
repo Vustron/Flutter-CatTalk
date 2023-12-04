@@ -119,7 +119,9 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     _message != null
                         ? _message!.type == Type.image
                             ? 'Sent a photo'
-                            : _message!.msg
+                            : _message!.type == Type.file
+                                ? 'Sent a file'
+                                : _message!.msg
                         : widget.user.about,
                     maxLines: 1,
                     style: TextStyle(
@@ -127,6 +129,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                       color: Colors.black,
                     ),
                   ),
+
                   // Last message time
                   trailing: _message == null
                       ? null // Show nothing when no message is sent

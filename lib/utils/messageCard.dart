@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, unnecessary_string_interpolations, unrelated_type_equality_checks
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, unnecessary_string_interpolations, unrelated_type_equality_checks, no_leading_underscores_for_local_identifiers
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +11,7 @@ import '../main.dart';
 import '../model/message.dart';
 import '../screens/chat_screen.dart';
 import 'dialogs/dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
@@ -22,9 +23,15 @@ class MessageCard extends StatefulWidget {
 }
 
 class _MessageCardState extends State<MessageCard> {
+  // for handling message text changes
+  final _textController = TextEditingController();
+
+  bool isReplied = false;
+
   @override
   Widget build(BuildContext context) {
     bool isMe = API.user.uid == widget.message.fromId;
+
     return InkWell(
         onLongPress: () {
           _showBottomSheet(isMe);
@@ -34,6 +41,8 @@ class _MessageCardState extends State<MessageCard> {
 
   // sender or another user message
   Widget _blueMessage() {
+    // file url
+    final Uri _fileURL = Uri.parse(widget.message.msg);
     // update last read message if sender and reciever are different
     if (widget.message.read.isEmpty) {
       API.updateMessageReadStatus(widget.message);
@@ -60,30 +69,47 @@ class _MessageCardState extends State<MessageCard> {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            child: widget.message.type == Type.text
-                ?
-                // show text
-                Text(widget.message.msg,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                    ))
-                :
-                // show image
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
+            child: widget.message.type == Type.file
+                ? // show file
+                InkWell(
+                    onTap: () async {
+                      if (!await launchUrl(_fileURL)) {
+                        throw Exception('Could not launch $_fileURL');
+                      }
+                    },
+                    child: Text(
+                      widget.message.msg,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.blue, // Adjust the color as needed
+                        decoration: TextDecoration.underline,
                       ),
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.image, size: 70),
                     ),
-                  ),
+                  )
+                : widget.message.type == Type.text
+                    ? Text(
+                        widget.message.msg,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      )
+                    : // show image
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.message.msg,
+                          placeholder: (context, url) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.image, size: 70),
+                        ),
+                      ),
           ),
         ),
+
         // message time
         Padding(
           padding: EdgeInsets.only(right: mq.width * .04),
@@ -102,6 +128,8 @@ class _MessageCardState extends State<MessageCard> {
 
   // our message or user message
   Widget _greenMessage() {
+    // file url
+    final Uri _fileURL = Uri.parse(widget.message.msg);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -149,28 +177,44 @@ class _MessageCardState extends State<MessageCard> {
                 bottomLeft: Radius.circular(30),
               ),
             ),
-            child: widget.message.type == Type.text
-                ?
-                // show text
-                Text(widget.message.msg,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                    ))
-                :
-                // show image
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
+            child: widget.message.type == Type.file
+                ? // show file
+                InkWell(
+                    onTap: () async {
+                      if (!await launchUrl(_fileURL)) {
+                        throw Exception('Could not launch $_fileURL');
+                      }
+                    },
+                    child: Text(
+                      widget.message.msg,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.blue, // Adjust the color as needed
+                        decoration: TextDecoration.underline,
                       ),
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.image, size: 70),
                     ),
-                  ),
+                  )
+                : widget.message.type == Type.text
+                    ? Text(
+                        widget.message.msg,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      )
+                    : // show image
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.message.msg,
+                          placeholder: (context, url) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.image, size: 70),
+                        ),
+                      ),
           ),
         ),
       ],
@@ -198,7 +242,8 @@ class _MessageCardState extends State<MessageCard> {
                 ),
               ),
 
-              widget.message.type == Type.text
+              widget.message.type == Type.text ||
+                      widget.message.type == Type.file
                   ?
                   // copy option
                   _OptionItem(
@@ -355,10 +400,10 @@ class _MessageCardState extends State<MessageCard> {
               actions: [
                 // update button
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // hide alert dialog
                     Navigator.pop(context);
-                    API.updateMessage(widget.message, updateMsg);
+                    await API.updateMessage(widget.message, updateMsg);
                   },
                   child: Text(
                     'Update',

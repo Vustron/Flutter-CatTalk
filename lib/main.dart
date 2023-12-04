@@ -43,12 +43,12 @@ class App extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => FacebookSignInProvider()),
           ],
           child: MaterialApp(
-            title: 'We Chat',
+            title: 'WeChat',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               appBarTheme: const AppBarTheme(
                 centerTitle: true,
-                elevation: 1,
+                elevation: 0,
                 iconTheme: IconThemeData(
                   color: Colors.white,
                 ),
@@ -57,7 +57,7 @@ class App extends StatelessWidget {
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                 ),
-                color: Color.fromARGB(255, 68, 255, 196),
+                backgroundColor: Color.fromARGB(255, 68, 255, 196),
               ),
             ),
             builder: EasyLoading.init(),

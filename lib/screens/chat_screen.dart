@@ -1,9 +1,11 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, deprecated_member_use
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, file_names, prefer_const_constructors, deprecated_member_use, prefer_const_declarations, no_leading_underscores_for_local_identifiers
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:WeChat/screens/video_call_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
@@ -59,25 +61,28 @@ class _ChatScreenState extends State<ChatScreen> {
               automaticallyImplyLeading: false,
               flexibleSpace: _appBar(),
               actions: [
-                IconButton(
-                  onPressed: () async {
-                    API.sendVideoCallPushNotification(widget.user);
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.leftToRightWithFade,
-                        child: VideoCallScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.video_call,
-                    size: 30,
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: IconButton(
+                    onPressed: () async {
+                      API.sendVideoCallPushNotification(widget.user);
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.leftToRightWithFade,
+                          child: VideoCallScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.video_call,
+                      size: 30,
+                    ),
                   ),
                 ),
               ],
             ),
-            backgroundColor: Color.fromARGB(255, 215, 245, 246),
+            backgroundColor: Colors.white,
             // body
             body: Column(
               children: [
@@ -112,7 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               padding: const EdgeInsets.only(top: 2),
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return MessageCard(message: _list[index]);
+                                return MessageCard(
+                                  message: _list[index],
+                                );
                               },
                             );
                           } else {
@@ -314,7 +321,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Card(
-              color: Colors.white,
+              color: Colors.white70,
               child: Row(
                 children: [
                   // emoji button
@@ -326,59 +333,107 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(Icons.emoji_emotions,
                         color: Color.fromARGB(255, 68, 255, 196), size: 25),
                   ),
+
+                  // textfield
                   Expanded(
-                      child: TextField(
-                    controller: _textController,
-                    style: TextStyle(color: Colors.black),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    onTap: () {
-                      if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Type something...',
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
+                    child: TextField(
+                      controller: _textController,
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      onTap: () {
+                        if (_showEmoji) {
+                          setState(() => _showEmoji = !_showEmoji);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Say something',
+                        hintStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                        border: InputBorder.none,
                       ),
-                      border: InputBorder.none,
                     ),
-                  )),
+                  ),
+
                   // pick an image from gallery button
+                  SizedBox(
+                    width: 40,
+                    child: IconButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // pick multiple images
+                        final List<XFile> images = await picker.pickMultiImage(
+                          imageQuality: 70,
+                        );
+                        // uploading and sending images one by one
+                        for (var i in images) {
+                          print('Image Path: ${i.path}');
+                          setState(() => _isUploading = true);
+                          await API.sendChatImage(widget.user, File(i.path));
+                          setState(() => _isUploading = false);
+                        }
+                      },
+                      icon: const Icon(Icons.image,
+                          color: Color.fromARGB(255, 68, 255, 196), size: 26),
+                    ),
+                  ),
+
+                  // select file then upload
                   IconButton(
                     onPressed: () async {
-                      final ImagePicker picker = ImagePicker();
-                      // pick multiple images
-                      final List<XFile> images = await picker.pickMultiImage(
-                        imageQuality: 70,
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.custom,
+                        allowedExtensions: [
+                          'pdf',
+                          'doc',
+                          'docx',
+                          'csv',
+                          'excel'
+                        ],
                       );
-                      // uploading and sending images one by one
-                      for (var i in images) {
-                        log('Image Path: ${i.path}');
-                        setState(() => _isUploading = true);
-                        await API.sendChatImage(widget.user, File(i.path));
-                        setState(() => _isUploading = false);
+
+                      if (result != null) {
+                        Uint8List? fileBytes = result.files.first.bytes;
+                        String fileName = result.files.first.name;
+                        List<File> files =
+                            result.paths.map((path) => File(path!)).toList();
+
+                        for (var i in files) {
+                          print('File Path: ${result.paths}');
+                          setState(() => _isUploading = true);
+                          await API.uploadFiles(widget.user, File(i.path));
+                          setState(() => _isUploading = false);
+                        }
                       }
                     },
-                    icon: const Icon(Icons.image,
+                    icon: const Icon(Icons.attach_file_rounded,
                         color: Color.fromARGB(255, 68, 255, 196), size: 26),
                   ),
+
                   // take an image from camera button
-                  IconButton(
-                    onPressed: () async {
-                      final ImagePicker picker = ImagePicker();
-                      // pick an image
-                      final XFile? image = await picker.pickImage(
-                          source: ImageSource.camera, imageQuality: 70);
-                      if (image != null) {
-                        log('Image Path: ${image.path}');
-                        setState(() => _isUploading = true);
-                        await API.sendChatImage(widget.user, File(image.path));
-                        setState(() => _isUploading = false);
-                      }
-                    },
-                    icon: const Icon(Icons.camera_alt_rounded,
-                        color: Color.fromARGB(255, 68, 255, 196), size: 26),
+                  SizedBox(
+                    width: 40,
+                    child: IconButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // pick an image
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 70);
+                        if (image != null) {
+                          print('Image Path: ${image.path}');
+                          setState(() => _isUploading = true);
+                          await API.sendChatImage(
+                              widget.user, File(image.path));
+                          setState(() => _isUploading = false);
+                        }
+                      },
+                      icon: const Icon(Icons.camera_alt_rounded,
+                          color: Color.fromARGB(255, 68, 255, 196), size: 26),
+                    ),
                   ),
                   // add space
                   SizedBox(width: mq.width * .02),

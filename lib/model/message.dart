@@ -21,7 +21,11 @@ class Message {
     read = json['read'].toString();
     sent = json['sent'].toString();
     told = json['told'].toString();
-    type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
+    type = json['type'].toString() == Type.image.name
+        ? Type.image
+        : json['type'].toString() == Type.file.name
+            ? Type.file
+            : Type.text;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,4 +40,4 @@ class Message {
   }
 }
 
-enum Type { text, image }
+enum Type { text, image, file }
