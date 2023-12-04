@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
+    final ChatUser chatUser;
 
     return GestureDetector(
       // for hiding keyboard when a tap is detected on screen
@@ -97,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         child: SafeArea(
           child: Scaffold(
-            backgroundColor: Color.fromARGB(255, 215, 245, 246),
+            backgroundColor: Colors.white70,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               // leading: const Icon(CupertinoIcons.home),
@@ -134,18 +136,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         }
                       },
                     )
-                  : AnimatedTextKit(
-                      animatedTexts: [
-                        WavyAnimatedText(
-                          'WeChat',
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w900,
+                  : Align(
+                      alignment: Alignment.topLeft,
+                      child: AnimatedTextKit(
+                        animatedTexts: [
+                          WavyAnimatedText(
+                            'Chat',
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            speed: const Duration(milliseconds: 100),
                           ),
-                          speed: const Duration(milliseconds: 100),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
               actions: [
                 IconButton(

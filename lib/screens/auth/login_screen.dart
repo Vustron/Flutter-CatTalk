@@ -158,73 +158,73 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
 
           // facebook login
-          AnimatedPositioned(
-            bottom: _isAnimate ? mq.height * 0.1 : -mq.width * .5,
-            left: mq.width * 0.14,
-            height: mq.height * 0.2,
-            duration: const Duration(seconds: 1),
-            child: Center(
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  Dialogs.showProgressBar(context);
-                  try {
-                    final provider = Provider.of<FacebookSignInProvider>(
-                        context,
-                        listen: false);
-                    await provider.facebookLogin();
-                    if (await API.userExists()) {
-                      Navigator.pushReplacement(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.bottomToTop,
-                            child: const HomeScreen(),
-                          ));
-                    } else {
-                      await API.createUser().then((value) {
-                        Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.bottomToTop,
-                              child: const HomeScreen(),
-                            ));
-                      });
-                    }
-                  } catch (error) {
-                    log('Error during Facebook login: $error');
-                    Dialogs.showSnackBar(
-                        context, 'Something went wrong (Check Internet)');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 68, 140, 255),
-                  shape: const StadiumBorder(),
-                  elevation: 1,
-                ),
-                icon: SizedBox(
-                  width: mq.height * 0.05,
-                  height: mq.height * 0.07,
-                  child: Image.asset('assets/images/facebook.png'),
-                ),
-                label: RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 19,
-                    ),
-                    children: [
-                      TextSpan(text: 'Login with '),
-                      TextSpan(
-                        text: 'Facebook',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // AnimatedPositioned(
+          //   bottom: _isAnimate ? mq.height * 0.1 : -mq.width * .5,
+          //   left: mq.width * 0.14,
+          //   height: mq.height * 0.2,
+          //   duration: const Duration(seconds: 1),
+          //   child: Center(
+          //     child: ElevatedButton.icon(
+          //       onPressed: () async {
+          //         Dialogs.showProgressBar(context);
+          //         try {
+          //           final provider = Provider.of<FacebookSignInProvider>(
+          //               context,
+          //               listen: false);
+          //           await provider.facebookLogin();
+          //           if (await API.userExists()) {
+          //             Navigator.pushReplacement(
+          //                 context,
+          //                 PageTransition(
+          //                   type: PageTransitionType.bottomToTop,
+          //                   child: const HomeScreen(),
+          //                 ));
+          //           } else {
+          //             await API.createUser().then((value) {
+          //               Navigator.pushReplacement(
+          //                   context,
+          //                   PageTransition(
+          //                     type: PageTransitionType.bottomToTop,
+          //                     child: const HomeScreen(),
+          //                   ));
+          //             });
+          //           }
+          //         } catch (error) {
+          //           log('Error during Facebook login: $error');
+          //           Dialogs.showSnackBar(
+          //               context, 'Something went wrong (Check Internet)');
+          //         }
+          //       },
+          //       style: ElevatedButton.styleFrom(
+          //         backgroundColor: const Color.fromARGB(255, 68, 140, 255),
+          //         shape: const StadiumBorder(),
+          //         elevation: 1,
+          //       ),
+          //       icon: SizedBox(
+          //         width: mq.height * 0.05,
+          //         height: mq.height * 0.07,
+          //         child: Image.asset('assets/images/facebook.png'),
+          //       ),
+          //       label: RichText(
+          //         text: const TextSpan(
+          //           style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 19,
+          //           ),
+          //           children: [
+          //             TextSpan(text: 'Login with '),
+          //             TextSpan(
+          //               text: 'Facebook',
+          //               style: TextStyle(
+          //                 fontWeight: FontWeight.w900,
+          //               ),
+          //             )
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ]),
       ),
     );

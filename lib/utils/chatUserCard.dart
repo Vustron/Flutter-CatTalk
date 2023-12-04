@@ -25,7 +25,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 68, 255, 196),
+      color: Colors.white70,
       margin: EdgeInsets.symmetric(horizontal: mq.width * .04, vertical: 4),
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -111,7 +111,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   // Last message
@@ -124,7 +124,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   // Last message time
@@ -148,7 +148,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                               MyDateUtil.getLastMessageTime(
                                   context: context, time: _message!.sent),
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 10,
                               ),
                             ));

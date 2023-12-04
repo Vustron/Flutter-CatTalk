@@ -70,7 +70,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.video_call),
+                  icon: const Icon(
+                    Icons.video_call,
+                    size: 30,
+                  ),
                 ),
               ],
             ),
@@ -311,7 +314,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Card(
-              color: Color.fromARGB(255, 68, 255, 196),
+              color: Colors.white,
               child: Row(
                 children: [
                   // emoji button
@@ -321,12 +324,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       setState(() => _showEmoji = !_showEmoji);
                     },
                     icon: const Icon(Icons.emoji_emotions,
-                        color: Colors.white, size: 25),
+                        color: Color.fromARGB(255, 68, 255, 196), size: 25),
                   ),
                   Expanded(
                       child: TextField(
                     controller: _textController,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     onTap: () {
@@ -335,7 +338,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: InputDecoration(
                       hintText: 'Type something...',
                       hintStyle: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 14,
                       ),
                       border: InputBorder.none,
@@ -357,8 +360,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         setState(() => _isUploading = false);
                       }
                     },
-                    icon:
-                        const Icon(Icons.image, color: Colors.white, size: 26),
+                    icon: const Icon(Icons.image,
+                        color: Color.fromARGB(255, 68, 255, 196), size: 26),
                   ),
                   // take an image from camera button
                   IconButton(
@@ -375,7 +378,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       }
                     },
                     icon: const Icon(Icons.camera_alt_rounded,
-                        color: Colors.white, size: 26),
+                        color: Color.fromARGB(255, 68, 255, 196), size: 26),
                   ),
                   // add space
                   SizedBox(width: mq.width * .02),
