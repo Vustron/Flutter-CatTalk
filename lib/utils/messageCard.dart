@@ -77,12 +77,16 @@ class _MessageCardState extends State<MessageCard> {
                         throw Exception('Could not launch $_fileURL');
                       }
                     },
-                    child: Text(
-                      widget.message.msg,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.blue, // Adjust the color as needed
-                        decoration: TextDecoration.underline,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.message.msg,
+                        placeholder: (context, url) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.image, size: 70),
                       ),
                     ),
                   )
@@ -130,6 +134,7 @@ class _MessageCardState extends State<MessageCard> {
   Widget _greenMessage() {
     // file url
     final Uri _fileURL = Uri.parse(widget.message.msg);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -185,13 +190,29 @@ class _MessageCardState extends State<MessageCard> {
                         throw Exception('Could not launch $_fileURL');
                       }
                     },
-                    child: Text(
-                      widget.message.msg,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.blue, // Adjust the color as needed
-                        decoration: TextDecoration.underline,
-                      ),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.message.msg,
+                            placeholder: (context, url) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.file_present_rounded, size: 70),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          widget.message.msg,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : widget.message.type == Type.text

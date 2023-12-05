@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 68, 255, 196),
           resizeToAvoidBottomInset: false,
 
           //title
@@ -113,169 +113,179 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
 
-          body: Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // Space
-                    SizedBox(width: mq.width, height: mq.height * .03),
+          body: Container(
+            height: 800,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Space
+                      SizedBox(width: mq.width, height: mq.height * .03),
 
-                    Stack(
-                      children: [
-                        // User Profile Picture
-                        _image != null
-                            ?
-                            // local image
-                            ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(mq.height * .1),
-                                child: Image.file(
-                                  File(_image!),
-                                  width: mq.height * .2,
-                                  height: mq.height * .2,
-                                  fit: BoxFit.cover,
-                                ))
-                            :
-                            // image from server
-                            ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(mq.height * .1),
-                                child: CachedNetworkImage(
-                                  width: mq.height * .2,
-                                  height: mq.height * .2,
-                                  fit: BoxFit.fill,
-                                  imageUrl: widget.user.image,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      CircleAvatar(
-                                    child: Icon(Icons.person),
+                      Stack(
+                        children: [
+                          // User Profile Picture
+                          _image != null
+                              ?
+                              // local image
+                              ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(mq.height * .1),
+                                  child: Image.file(
+                                    File(_image!),
+                                    width: mq.height * .2,
+                                    height: mq.height * .2,
+                                    fit: BoxFit.cover,
+                                  ))
+                              :
+                              // image from server
+                              ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(mq.height * .1),
+                                  child: CachedNetworkImage(
+                                    width: mq.height * .2,
+                                    height: mq.height * .2,
+                                    fit: BoxFit.fill,
+                                    imageUrl: widget.user.image,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        CircleAvatar(
+                                      child: Icon(Icons.person),
+                                    ),
                                   ),
                                 ),
+                          // Edit image button
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: MaterialButton(
+                              elevation: 1,
+                              onPressed: () {
+                                _showBottomSheet();
+                              },
+                              shape: const CircleBorder(),
+                              color: Color.fromARGB(255, 68, 255, 196),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
                               ),
-                        // Edit image button
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: MaterialButton(
-                            elevation: 1,
-                            onPressed: () {
-                              _showBottomSheet();
-                            },
-                            shape: const CircleBorder(),
-                            color: Color.fromARGB(255, 68, 255, 196),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.white,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    // Space
-                    SizedBox(height: mq.height * .03),
-                    // User Email
-                    Text(
-                      widget.user.email,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16,
+                        ],
                       ),
-                    ),
-                    // Space
-                    SizedBox(height: mq.height * .05),
-                    // User Name
-                    TextFormField(
-                      initialValue: widget.user.name,
-                      onSaved: (val) => API.me.name = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.person,
-                          color: Color.fromARGB(255, 68, 255, 196),
-                        ),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 68, 255, 196)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 68, 255, 196)),
-                        ),
-                        hintText: 'eg. John Doe',
-                        labelText: 'Name',
-                      ),
-                    ),
-                    // Space
-                    SizedBox(height: mq.height * .02),
-                    // User about
-                    TextFormField(
-                      initialValue: widget.user.about,
-                      onSaved: (val) => API.me.about = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.info_outline,
-                          color: Color.fromARGB(255, 68, 255, 196),
-                        ),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 68, 255, 196)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 68, 255, 196)),
-                        ),
-                        hintText: 'eg. Feeling Happy',
-                        labelText: 'About',
-                      ),
-                    ),
-                    // Space
-                    SizedBox(height: mq.height * .04),
-                    // Update Button
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          await API.updateUserInfo();
-                          Dialogs.showSnackBarUpdate(
-                              context, 'Profile Updated Sucessfully');
-                        }
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      label: const Text(
-                        'Update',
+                      // Space
+                      SizedBox(height: mq.height * .03),
+                      // User Email
+                      Text(
+                        widget.user.email,
                         style: TextStyle(
+                          color: Colors.black54,
                           fontSize: 16,
-                          color: Colors.white,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        backgroundColor: Color.fromARGB(255, 68, 255, 196),
-                        minimumSize: Size(mq.width * .5, mq.height * .06),
+                      // Space
+                      SizedBox(height: mq.height * .05),
+                      // User Name
+                      TextFormField(
+                        initialValue: widget.user.name,
+                        onSaved: (val) => API.me.name = val ?? '',
+                        validator: (val) => val != null && val.isNotEmpty
+                            ? null
+                            : 'Required Field',
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Color.fromARGB(255, 68, 255, 196),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 12),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 68, 255, 196)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 68, 255, 196)),
+                          ),
+                          hintText: 'eg. John Doe',
+                          labelText: 'Name',
+                        ),
                       ),
-                    ),
-                  ],
+                      // Space
+                      SizedBox(height: mq.height * .02),
+                      // User about
+                      TextFormField(
+                        initialValue: widget.user.about,
+                        onSaved: (val) => API.me.about = val ?? '',
+                        validator: (val) => val != null && val.isNotEmpty
+                            ? null
+                            : 'Required Field',
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.info_outline,
+                            color: Color.fromARGB(255, 68, 255, 196),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 12),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 68, 255, 196)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 68, 255, 196)),
+                          ),
+                          hintText: 'eg. Feeling Happy',
+                          labelText: 'About',
+                        ),
+                      ),
+                      // Space
+                      SizedBox(height: mq.height * .04),
+                      // Update Button
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            await API.updateUserInfo();
+                            Dialogs.showSnackBarUpdate(
+                                context, 'Profile Updated Sucessfully');
+                          }
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        label: const Text(
+                          'Update',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: Color.fromARGB(255, 68, 255, 196),
+                          minimumSize: Size(mq.width * .5, mq.height * .06),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -82,110 +82,121 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ],
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: Color.fromARGB(255, 68, 255, 196),
             // body
-            body: Column(
-              children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: API.getAllMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        // If data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                          return const Center(
-                            child: SpinKitFadingCircle(
-                              color: Color.fromARGB(255, 68, 255, 196),
-                              size: 50.0,
-                            ),
-                          );
-
-                        // If some or all data is loaded then show it
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          // log('Data: ${jsonEncode(data![0].data())}');
-                          _list = data
-                                  ?.map((e) => Message.fromJson(e.data()))
-                                  .toList() ??
-                              [];
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                              reverse: true,
-                              itemCount: _list.length,
-                              padding: const EdgeInsets.only(top: 2),
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return MessageCard(
-                                  message: _list[index],
-                                );
-                              },
-                            );
-                          } else {
+            body: Container(
+              height: 800,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: StreamBuilder(
+                      stream: API.getAllMessages(widget.user),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          // If data is loading
+                          case ConnectionState.waiting:
+                          case ConnectionState.none:
                             return const Center(
-                              child: Text(
-                                'Say Hi! 👋',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
+                              child: SpinKitFadingCircle(
+                                color: Color.fromARGB(255, 68, 255, 196),
+                                size: 50.0,
                               ),
                             );
-                          }
-                      }
-                    },
-                  ),
-                ),
 
-                // progress indicator for showing uploading
-                if (_isUploading)
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )),
-
-                // chat input field
-                _chatInput(),
-                // Show emojis on keyboard emoji button click & vice versa
-                if (_showEmoji)
-                  SizedBox(
-                    height: mq.height * .35,
-                    child: EmojiPicker(
-                      textEditingController: _textController,
-                      config: Config(
-                        bgColor: const Color.fromARGB(255, 234, 248, 255),
-                        columns: 8,
-                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                        verticalSpacing: 0,
-                        horizontalSpacing: 0,
-                        gridPadding: EdgeInsets.zero,
-                        initCategory: Category.RECENT,
-                        indicatorColor: Colors.blue,
-                        iconColor: Colors.grey,
-                        iconColorSelected: Colors.blue,
-                        backspaceColor: Colors.blue,
-                        skinToneDialogBgColor: Colors.white,
-                        skinToneIndicatorColor: Colors.grey,
-                        enableSkinTones: true,
-                        recentTabBehavior: RecentTabBehavior.RECENT,
-                        recentsLimit: 28,
-                        noRecents: const Text(
-                          'No Recents',
-                          style: TextStyle(fontSize: 20, color: Colors.black26),
-                          textAlign: TextAlign.center,
-                        ), // Needs to be const Widget
-                        loadingIndicator:
-                            const SizedBox.shrink(), // Needs to be const Widget
-                        tabIndicatorAnimDuration: kTabScrollDuration,
-                        categoryIcons: const CategoryIcons(),
-                        buttonMode: ButtonMode.MATERIAL,
-                      ),
+                          // If some or all data is loaded then show it
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                            final data = snapshot.data?.docs;
+                            // log('Data: ${jsonEncode(data![0].data())}');
+                            _list = data
+                                    ?.map((e) => Message.fromJson(e.data()))
+                                    .toList() ??
+                                [];
+                            if (_list.isNotEmpty) {
+                              return ListView.builder(
+                                reverse: true,
+                                itemCount: _list.length,
+                                padding: const EdgeInsets.only(top: 2),
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return MessageCard(
+                                    message: _list[index],
+                                  );
+                                },
+                              );
+                            } else {
+                              return const Center(
+                                child: Text(
+                                  'Say Hi! 👋',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              );
+                            }
+                        }
+                      },
                     ),
-                  )
-              ],
+                  ),
+
+                  // progress indicator for showing uploading
+                  if (_isUploading)
+                    const Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )),
+
+                  // chat input field
+                  _chatInput(),
+                  // Show emojis on keyboard emoji button click & vice versa
+                  if (_showEmoji)
+                    SizedBox(
+                      height: mq.height * .35,
+                      child: EmojiPicker(
+                        textEditingController: _textController,
+                        config: Config(
+                          bgColor: const Color.fromARGB(255, 234, 248, 255),
+                          columns: 8,
+                          emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                          verticalSpacing: 0,
+                          horizontalSpacing: 0,
+                          gridPadding: EdgeInsets.zero,
+                          initCategory: Category.RECENT,
+                          indicatorColor: Colors.blue,
+                          iconColor: Colors.grey,
+                          iconColorSelected: Colors.blue,
+                          backspaceColor: Colors.blue,
+                          skinToneDialogBgColor: Colors.white,
+                          skinToneIndicatorColor: Colors.grey,
+                          enableSkinTones: true,
+                          recentTabBehavior: RecentTabBehavior.RECENT,
+                          recentsLimit: 28,
+                          noRecents: const Text(
+                            'No Recents',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black26),
+                            textAlign: TextAlign.center,
+                          ), // Needs to be const Widget
+                          loadingIndicator: const SizedBox
+                              .shrink(), // Needs to be const Widget
+                          tabIndicatorAnimDuration: kTabScrollDuration,
+                          categoryIcons: const CategoryIcons(),
+                          buttonMode: ButtonMode.MATERIAL,
+                        ),
+                      ),
+                    )
+                ],
+              ),
             ),
           ),
         ),

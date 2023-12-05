@@ -8,7 +8,7 @@ import '/utils/my_date_util.dart';
 import '../controller/api.dart';
 import '../main.dart';
 import '../model/message.dart';
-import '../screens/chat_screen.dart';
+import 'chat_screen.dart';
 
 class ChatUserAvatar extends StatefulWidget {
   final ChatUser user;

@@ -154,20 +154,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ),
               actions: [
-                IconButton(
-                  onPressed: () async {
-                    setState(() {
-                      _isSearching = !_isSearching;
-                    });
-                  },
-                  icon: Icon(
-                    _isSearching
-                        ? CupertinoIcons.clear_circled_solid
-                        : Icons.search,
+                Padding(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: IconButton(
+                    onPressed: () async {
+                      setState(() {
+                        _isSearching = !_isSearching;
+                      });
+                    },
+                    icon: Icon(
+                      _isSearching
+                          ? CupertinoIcons.clear_circled_solid
+                          : Icons.search,
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     onPressed: () {
                       Navigator.push(
