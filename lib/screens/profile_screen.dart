@@ -60,33 +60,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Add a delay of 2 seconds using Future.delayed
                 await Future.delayed(const Duration(seconds: 2));
 
-                // Google provider and listener
-                final googleprovider =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                // // Google provider and listener
+                // final googleprovider =
+                //     Provider.of<GoogleSignInProvider>(context, listen: false);
 
-                await googleprovider.googleLogout().then((value) async {
-                  // for moving to home screen
-                  Navigator.pop(context);
-
-                  API.auth = FirebaseAuth.instance;
-
-                  // Replacing home screen with login screen
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.topToBottom,
-                        child: const LoginScreen(),
-                      ));
-                  EasyLoading.dismiss();
-                });
-
-                // Facebook provider and Listener
-                // final facebookprovider =
-                //     Provider.of<FacebookSignInProvider>(context, listen: false);
-
-                // await facebookprovider.facebookLogout().then((value) async {
-                //   // for hiding progress dialog
-                //   Navigator.pop(context);
+                // await googleprovider.googleLogout().then((value) async {
                 //   // for moving to home screen
                 //   Navigator.pop(context);
 
@@ -99,7 +77,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 //         type: PageTransitionType.topToBottom,
                 //         child: const LoginScreen(),
                 //       ));
+                //   EasyLoading.dismiss();
                 // });
+
+                // Facebook provider and Listener
+                final facebookprovider =
+                    Provider.of<FacebookSignInProvider>(context, listen: false);
+
+                await facebookprovider.facebookLogout().then((value) async {
+                  // for hiding progress dialog
+                  Navigator.pop(context);
+
+                  API.auth = FirebaseAuth.instance;
+
+                  // Replacing home screen with login screen
+                  Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.topToBottom,
+                        child: const LoginScreen(),
+                      ));
+
+                  EasyLoading.dismiss();
+                });
               },
               icon: const Icon(
                 Icons.logout,

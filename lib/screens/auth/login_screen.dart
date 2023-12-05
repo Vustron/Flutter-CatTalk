@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          // facebook login
+          // // facebook login
           // AnimatedPositioned(
           //   bottom: _isAnimate ? mq.height * 0.1 : -mq.width * .5,
           //   left: mq.width * 0.14,
