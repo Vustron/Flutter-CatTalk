@@ -40,7 +40,14 @@ class _VideoCallScreenState extends State<VideoCallScreen>
         child: Stack(
           children: [
             // video call screen
-            AgoraVideoViewer(client: client),
+            AgoraVideoViewer(
+              client: client,
+              layoutType: Layout.floating,
+              floatingLayoutContainerHeight: 100,
+              floatingLayoutContainerWidth: 100,
+              showNumberOfUsers: true,
+              showAVState: true,
+            ),
             AgoraVideoButtons(client: client),
           ],
         ),
