@@ -357,6 +357,8 @@ class _MessageCardState extends State<MessageCard> {
                         // for hiding  bottom sheet
                         Navigator.pop(context);
                       });
+                      Dialogs.showSnackBarSuccess(
+                          context, 'Message deleted successfully');
                     }),
 
               // separator

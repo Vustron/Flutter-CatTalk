@@ -34,6 +34,21 @@ class Dialogs {
     );
   }
 
+  static void showSnackBarSuccess(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: AwesomeSnackbarContent(
+          title: 'Success!',
+          message: msg,
+          contentType: ContentType.success,
+        ),
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+      ),
+    );
+  }
+
   static void showSnackBarCopy(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

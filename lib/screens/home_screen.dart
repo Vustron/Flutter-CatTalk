@@ -541,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       if (!value) {
                         Dialogs.showSnackBar(context, 'User does not exist');
                       }
-                      Dialogs.showSnackBarUpdate(
+                      Dialogs.showSnackBarSuccess(
                           context, 'User added successfully');
                     });
                   } else {
