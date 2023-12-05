@@ -47,6 +47,7 @@ dependencies:
   flutter_facebook_auth: ^6.0.3
   agora_token_service: ^0.1.2
   file_picker: ^6.1.1
+  swipe_to: ^1.0.4
 
 dev_dependencies:
   flutter_native_splash: ^2.3.5

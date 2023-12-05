@@ -1194,6 +1194,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  swipe_to:
+    dependency: "direct main"
+    description:
+      name: swipe_to
+      sha256: cb4d749e46cea268eca14f7160f80db2328470fe1f7d547960db837f55b6691f
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:

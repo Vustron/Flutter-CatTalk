@@ -20,6 +20,7 @@ import 'auth/login_screen.dart';
 import 'chatUserAvatar.dart';
 import 'profile_screen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:swipe_to/swipe_to.dart';
 
 // Home Screen
 class HomeScreen extends StatefulWidget {
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
 
     // Second call to get self info after a short delay
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {});
       API.getSelfInfo();
     });
@@ -86,9 +87,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    final text = MediaQuery.of(context).platformBrightness == Brightness.dark
-        ? 'DarkTheme'
-        : 'LightTheme';
 
     return GestureDetector(
       // for hiding keyboard when a tap is detected on screen
@@ -321,11 +319,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                             top: mq.height * .01),
                                         physics: const BouncingScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          return Container(
-                                            child: ChatUserCard(
-                                                user: _isSearching
-                                                    ? _searchList[index]
-                                                    : _list[index]),
+                                          return SwipeTo(
+                                            onLeftSwipe:
+                                                (DragUpdateDetails details) {
+                                              // Check if the swipe distance is sufficient to trigger the delete action
+
+                                              _deleteUserConversation();
+                                            },
+                                            child: Container(
+                                              child: ChatUserCard(
+                                                  user: _isSearching
+                                                      ? _searchList[index]
+                                                      : _list[index]),
+                                            ),
                                           );
                                         },
                                       ),
@@ -350,6 +356,117 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  // dialog for deleting user conversations
+  void _deleteUserConversation() {
+    String email = '';
+
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            // title
+            title: Row(
+              children: const [
+                Icon(
+                  Icons.person_add,
+                  color: Color.fromARGB(255, 68, 255, 196),
+                  size: 28,
+                ),
+                Text(
+                  ' Remove User',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+
+            // content
+            content: TextFormField(
+              maxLines: null,
+              onChanged: (value) => email = value,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                hintText: 'Email Id',
+                hintStyle: TextStyle(color: Colors.black),
+                prefixIcon: const Icon(
+                  Icons.email,
+                  color: Color.fromARGB(255, 68, 255, 196),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 68, 255, 196)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 68, 255, 196)),
+                ),
+              ),
+            ),
+
+            // actions
+            actions: [
+              // add button
+              MaterialButton(
+                onPressed: () async {
+                  // hide alert dialog
+                  Navigator.pop(context);
+                  if (email.isNotEmpty) {
+                    await API.removeChatUser(email).then((value) {
+                      if (!value) {
+                        Dialogs.showSnackBar(context, 'User does not exist');
+                      }
+                      Dialogs.showSnackBarUpdate(
+                          context, 'User removed successfully');
+                    });
+                  } else {
+                    Dialogs.showSnackBar(context, 'Please input an email');
+                  }
+                },
+                child: Text(
+                  'Remove',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              // cancel button
+              MaterialButton(
+                onPressed: () {
+                  _dialogController.reverse();
+                  // hide alert dialog
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    // Start the animation when the dialog is displayed
+    _dialogController.forward();
   }
 
   // dialog for updating message content
@@ -424,6 +541,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       if (!value) {
                         Dialogs.showSnackBar(context, 'User does not exist');
                       }
+                      Dialogs.showSnackBarUpdate(
+                          context, 'User added successfully');
                     });
                   } else {
                     Dialogs.showSnackBar(context, 'Please input an email');

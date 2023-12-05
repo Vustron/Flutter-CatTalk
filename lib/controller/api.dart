@@ -166,6 +166,34 @@ class API {
     }
   }
 
+  // for removing a chat user from our conversation
+  static Future<bool> removeChatUser(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    print('Data: ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      // if user exists
+
+      print('User exists: ${data.docs.first.data()}');
+
+      firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .delete();
+
+      return true;
+    } else {
+      // if user didn't exists
+      return false;
+    }
+  }
+
   // for getting user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
