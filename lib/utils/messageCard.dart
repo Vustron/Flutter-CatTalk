@@ -77,17 +77,29 @@ class _MessageCardState extends State<MessageCard> {
                         throw Exception('Could not launch $_fileURL');
                       }
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.message.msg,
-                        placeholder: (context, url) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.message.msg,
+                            placeholder: (context, url) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.file_present_rounded, size: 70),
+                          ),
                         ),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.image, size: 70),
-                      ),
+                        SizedBox(height: 8),
+                        Text(
+                          widget.message.msg,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : widget.message.type == Type.text

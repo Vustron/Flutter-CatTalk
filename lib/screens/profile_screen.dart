@@ -56,7 +56,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // for showing progress
                 EasyLoading.show(status: 'loading...');
 
-                await API.updateActiveStatus(false);
+                API.updateActiveStatus(false);
+                // Add a delay of 2 seconds using Future.delayed
+                await Future.delayed(const Duration(seconds: 2));
 
                 // Google provider and listener
                 final googleprovider =

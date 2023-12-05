@@ -90,7 +90,6 @@ class _ChatUserAvatarState extends State<ChatUserAvatar> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 11,
-                            color: Colors.black,
                           ),
                         ),
                       ),

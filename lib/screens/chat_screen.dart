@@ -401,6 +401,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         allowedExtensions: [
                           'pdf',
                           'doc',
+                          'mp4',
                           'docx',
                           'csv',
                           'excel'

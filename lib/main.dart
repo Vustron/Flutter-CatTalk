@@ -45,6 +45,7 @@ class App extends StatelessWidget {
           child: MaterialApp(
             title: 'WeChat',
             debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.system,
             theme: ThemeData(
               appBarTheme: const AppBarTheme(
                 centerTitle: true,

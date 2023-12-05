@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void, prefer_const_constructors
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,16 +33,17 @@ class _SplashScreenState extends State<SplashScreen> {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.black,
-        statusBarColor: Colors.transparent,
+        statusBarColor: Colors.black,
       ));
       if (API.auth.currentUser != null) {
-        log('\nUser: ${API.auth.currentUser}');
+        print('\nUser: ${API.auth.currentUser}');
+
         Navigator.pushReplacement(
             context,
             PageTransition(
               type: PageTransitionType.size,
               alignment: Alignment.bottomCenter,
-              child: const HomeScreen(),
+              child: HomeScreen(),
             ));
       } else {
         Navigator.pushReplacement(
@@ -50,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
             PageTransition(
               type: PageTransitionType.size,
               alignment: Alignment.bottomCenter,
-              child: const LoginScreen(),
+              child: LoginScreen(),
             ));
       }
     });

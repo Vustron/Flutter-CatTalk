@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace
+// ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, unused_element
 import 'dart:convert';
 import 'dart:developer';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -43,14 +43,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    // get self info
+    API.getSelfInfo();
+
     // dialog control animation
     _dialogController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500), // Adjust the duration as needed
     );
-
-    // get self info
-    API.getSelfInfo();
 
     // for updating user active status according to lifecycle events
     // resume = active or online
@@ -69,6 +69,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       return Future.value(message);
     });
+
+    // Second call to get self info after a short delay
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {});
+      API.getSelfInfo();
+    });
   }
 
   @override
@@ -80,7 +86,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    final ChatUser chatUser;
+    final text = MediaQuery.of(context).platformBrightness == Brightness.dark
+        ? 'DarkTheme'
+        : 'LightTheme';
 
     return GestureDetector(
       // for hiding keyboard when a tap is detected on screen
@@ -173,13 +181,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   padding: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.leftToRightWithFade,
-                          child: ProfileScreen(user: API.me),
-                        ),
-                      );
+                      if (API.me.image != null) {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.leftToRightWithFade,
+                            child: ProfileScreen(user: API.me),
+                          ),
+                        );
+                      } else {
+                        // Handle the case where API.me.image is null
+                      }
                     },
                     icon: ClipRRect(
                       borderRadius: BorderRadius.circular(mq.height * .1),

@@ -290,7 +290,7 @@ class API {
       print('Data transferred: ${p0.bytesTransferred / 1000} kb');
     });
 
-    // Updating image in firestore database
+    // Updating file in firestore database
     final fileURL = await ref.getDownloadURL();
     await sendMessage(chatUser, fileURL, Type.file);
   }

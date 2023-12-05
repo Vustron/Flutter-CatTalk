@@ -102,7 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   try {
                     final provider = Provider.of<GoogleSignInProvider>(context,
                         listen: false);
+
                     await provider.googleLogin();
+
+                    await Future.delayed(const Duration(seconds: 1));
+
                     if (await API.userExists()) {
                       Navigator.pushReplacement(
                           context,
