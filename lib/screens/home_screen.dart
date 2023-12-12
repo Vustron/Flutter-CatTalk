@@ -80,11 +80,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       return Future.value(message);
     });
 
-    // // Second call to get self info after a short delay
-    // Future.delayed(Duration(milliseconds: 1000), () {
-    //   setState(() {});
-    //   API.getSelfInfo();
-    // });
+    // Second call to get self info after a short delay
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {});
+      API.getSelfInfo();
+    });
   }
 
   @override

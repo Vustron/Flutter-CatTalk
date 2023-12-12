@@ -27,8 +27,8 @@ class _VideoCallScreenState extends State<VideoCallScreen>
     // initialize agora client
     agoraProvider.initializeAgora();
 
-    // init token generator
-    agoraProvider.getToken();
+    // // init token generator
+    // agoraProvider.getToken();
 
     // Start the timer
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
