@@ -111,16 +111,21 @@ class _MessageCardState extends State<MessageCard> {
                         ),
                       )
                     : // show image
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: CachedNetworkImage(
-                          imageUrl: widget.message.msg,
-                          placeholder: (context, url) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(),
+                    InkWell(
+                        onTap: () async {
+                          _previewImageDialog();
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.message.msg,
+                            placeholder: (context, url) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.image, size: 70),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.image, size: 70),
                         ),
                       ),
           ),
