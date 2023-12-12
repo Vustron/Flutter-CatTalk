@@ -25,7 +25,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white70,
+      color: Colors.white,
       margin: EdgeInsets.symmetric(horizontal: mq.width * .04, vertical: 4),
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

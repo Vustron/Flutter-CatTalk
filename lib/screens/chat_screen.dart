@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:WeChat/screens/video_call_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,22 @@ class _ChatScreenState extends State<ChatScreen> {
   // show emoji -- for storing value of showing or hiding emoji
   // isUploading -- for checking if image is uploading or not?
   bool _showEmoji = false, _isUploading = false;
+  // Declare a stream variable
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    // Assign the stream variable to the firebase collection snapshots stream
+    _stream = API.getAllMessages(widget.user);
+  }
+
+  // Define a function that returns a Future<void> and updates the stream variable
+  Future<void> _refreshData() async {
+    setState(() {
+      _stream = API.getAllMessages(widget.user);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
             body: Container(
               height: 800,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.white70,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
@@ -120,16 +137,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                     .toList() ??
                                 [];
                             if (_list.isNotEmpty) {
-                              return ListView.builder(
-                                reverse: true,
-                                itemCount: _list.length,
-                                padding: const EdgeInsets.only(top: 2),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return MessageCard(
-                                    message: _list[index],
-                                  );
-                                },
+                              return RefreshIndicator(
+                                onRefresh: _refreshData,
+                                child: ListView.builder(
+                                  reverse: true,
+                                  itemCount: _list.length,
+                                  padding: const EdgeInsets.only(top: 2),
+                                  physics: const BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return MessageCard(
+                                      message: _list[index],
+                                    );
+                                  },
+                                ),
                               );
                             } else {
                               return const Center(
@@ -332,7 +352,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Card(
-              color: Colors.white70,
+              color: Colors.white,
               child: Row(
                 children: [
                   // emoji button
@@ -404,7 +424,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           'mp4',
                           'docx',
                           'csv',
-                          'excel'
+                          'excel',
                         ],
                       );
 

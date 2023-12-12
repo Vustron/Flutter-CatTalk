@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, avoid_print, unused_label, unused_local_variable, unnecessary_null_comparison, prefer_const_constructors, prefer_final_fields, unused_field, deprecated_member_use, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, unused_element
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +41,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool _isSearching = false;
   // for animations
   late AnimationController _dialogController;
+  // init scroller controller
+  ScrollController? _scrollController;
+  // Declare a stream variable
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _stream;
 
   @override
   void initState() {
@@ -46,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // get self info
     API.getSelfInfo();
+
+    // Assign the stream variable to the firebase collection snapshots stream
+    _stream = API.getMyUsersId();
 
     // dialog control animation
     _dialogController = AnimationController(
@@ -71,11 +80,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       return Future.value(message);
     });
 
-    // Second call to get self info after a short delay
-    Future.delayed(Duration(milliseconds: 1000), () {
-      setState(() {});
-      API.getSelfInfo();
-    });
+    // // Second call to get self info after a short delay
+    // Future.delayed(Duration(milliseconds: 1000), () {
+    //   setState(() {});
+    //   API.getSelfInfo();
+    // });
   }
 
   @override
@@ -84,8 +93,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  // Define a function that returns a Future<void> and updates the stream variable
+  Future<void> _refreshData() async {
+    setState(() {
+      _stream = API.getMyUsersId();
+      API.getSelfInfo();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // init user
     final User? user = FirebaseAuth.instance.currentUser;
 
     return GestureDetector(
@@ -101,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             });
             return Future.value(false);
           }
-          return Future.value(false);
+          return Future.value(true);
         },
         child: SafeArea(
           child: Scaffold(
@@ -179,17 +197,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   padding: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     onPressed: () {
-                      if (API.me.image != null) {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.leftToRightWithFade,
-                            child: ProfileScreen(user: API.me),
-                          ),
-                        );
-                      } else {
-                        // Handle the case where API.me.image is null
-                      }
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.leftToRightWithFade,
+                          child: ProfileScreen(user: API.me),
+                        ),
+                      );
                     },
                     icon: ClipRRect(
                       borderRadius: BorderRadius.circular(mq.height * .1),
@@ -226,7 +240,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             // body
             body: StreamBuilder(
                 stream: API.getMyUsersId(),
-
                 // get id of only known users
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
@@ -271,72 +284,85 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   [];
 
                               if (_list.isNotEmpty) {
-                                return Column(
-                                  children: [
-                                    Container(
-                                      height: 76,
-                                      width: 340,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(25),
-                                          topRight: Radius.circular(25),
-                                          bottomLeft: Radius.circular(25),
-                                          bottomRight: Radius.circular(25),
-                                        ),
-                                      ),
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: _isSearching
-                                            ? _searchList.length
-                                            : _list.length,
-                                        padding: EdgeInsets.only(
-                                            top: mq.height * .01),
-                                        physics: const BouncingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return ChatUserAvatar(
-                                              user: _isSearching
-                                                  ? _searchList[index]
-                                                  : _list[index]);
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 16),
-                                    Container(
-                                      height: 576,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(25),
-                                          topRight: Radius.circular(25),
-                                        ),
-                                      ),
-                                      child: ListView.builder(
-                                        itemCount: _isSearching
-                                            ? _searchList.length
-                                            : _list.length,
-                                        padding: EdgeInsets.only(
-                                            top: mq.height * .01),
-                                        physics: const BouncingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return SwipeTo(
-                                            onLeftSwipe:
-                                                (DragUpdateDetails details) {
-                                              // Check if the swipe distance is sufficient to trigger the delete action
-
-                                              _deleteUserConversation();
-                                            },
-                                            child: Container(
-                                              child: ChatUserCard(
-                                                  user: _isSearching
-                                                      ? _searchList[index]
-                                                      : _list[index]),
+                                return RefreshIndicator(
+                                  onRefresh: _refreshData,
+                                  child: Column(
+                                    children: [
+                                      _isSearching
+                                          ? SizedBox()
+                                          : Container(
+                                              height: 76,
+                                              width: 340,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(25),
+                                                  topRight: Radius.circular(25),
+                                                  bottomLeft:
+                                                      Radius.circular(25),
+                                                  bottomRight:
+                                                      Radius.circular(25),
+                                                ),
+                                              ),
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: _isSearching
+                                                    ? _searchList.length
+                                                    : _list.length,
+                                                padding: EdgeInsets.only(
+                                                    top: mq.height * .01),
+                                                physics:
+                                                    const BouncingScrollPhysics(
+                                                        parent:
+                                                            AlwaysScrollableScrollPhysics()),
+                                                itemBuilder: (context, index) {
+                                                  return ChatUserAvatar(
+                                                      user: _isSearching
+                                                          ? _searchList[index]
+                                                          : _list[index]);
+                                                },
+                                              ),
                                             ),
-                                          );
-                                        },
+                                      SizedBox(height: 16),
+                                      Container(
+                                        height: 576,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white70,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(25),
+                                            topRight: Radius.circular(25),
+                                          ),
+                                        ),
+                                        child: ListView.builder(
+                                          itemCount: _isSearching
+                                              ? _searchList.length
+                                              : _list.length,
+                                          padding: EdgeInsets.only(
+                                              top: mq.height * .01),
+                                          physics: const BouncingScrollPhysics(
+                                              parent:
+                                                  AlwaysScrollableScrollPhysics()),
+                                          itemBuilder: (context, index) {
+                                            return SwipeTo(
+                                              onLeftSwipe:
+                                                  (DragUpdateDetails details) {
+                                                // Check if the swipe distance is sufficient to trigger the delete action
+
+                                                _deleteUserConversation();
+                                              },
+                                              child: Container(
+                                                child: ChatUserCard(
+                                                    user: _isSearching
+                                                        ? _searchList[index]
+                                                        : _list[index]),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 );
                               } else {
                                 return const Center(
