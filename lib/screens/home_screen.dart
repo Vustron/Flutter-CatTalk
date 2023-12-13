@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             });
             return Future.value(false);
           }
-          return Future.value(true);
+          return Future.value(false);
         },
         child: SafeArea(
           child: Scaffold(
