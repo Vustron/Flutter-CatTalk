@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
-import 'package:WeChat/controller/agora.dart';
+import '../controller/agora.dart';
 
 // video call screen
 class VideoCallScreen extends StatefulWidget {

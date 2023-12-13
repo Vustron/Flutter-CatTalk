@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:WeChat/screens/video_call_screen.dart';
+import '../screens/video_call_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';

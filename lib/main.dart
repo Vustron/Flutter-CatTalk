@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, unused_element
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -43,7 +42,7 @@ class App extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => FacebookSignInProvider()),
           ],
           child: MaterialApp(
-            title: 'WeChat',
+            title: 'CatTalk',
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.system,
             theme: ThemeData(

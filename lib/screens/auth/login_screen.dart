@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import, sort_child_properties_last, prefer_final_fields, unused_field, unused_element, avoid_print, unused_local_variable, use_build_context_synchronously, avoid_returning_null_for_void, depend_on_referenced_packages
 import 'dart:developer';
 
-import 'package:WeChat/controller/facebookAuth.dart';
+import '../../controller/facebookAuth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   AnimatedTextKit(
                     animatedTexts: [
                       ColorizeAnimatedText(
-                        'WeChat',
+                        'CatTalk',
                         textStyle: const TextStyle(
                             fontSize: 50, fontWeight: FontWeight.w900),
                         colors: [

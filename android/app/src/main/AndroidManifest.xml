@@ -29,7 +29,7 @@
         </queries>
 
     <application
-        android:label="WeChat"
+        android:label="CatTalk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

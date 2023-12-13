@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 AnimatedTextKit(
                   animatedTexts: [
                     ColorizeAnimatedText(
-                      'WeChat',
+                      'CatTalk',
                       textStyle: const TextStyle(
                           fontSize: 50, fontWeight: FontWeight.w900),
                       colors: [
@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 AnimatedTextKit(
                   animatedTexts: [
                     WavyAnimatedText(
-                      'Made by Vustron Vustronus',
+                      'Made by Vustron Vustronus and Co.',
                       textStyle: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,

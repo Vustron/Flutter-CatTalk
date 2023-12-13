@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:WeChat/controller/facebookAuth.dart';
+import '../controller/facebookAuth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
