@@ -1,4 +1,4 @@
-# wechat
+# CatTalk
 
 A new Flutter project.
 
