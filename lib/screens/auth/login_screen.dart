@@ -60,19 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   AnimatedTextKit(
                     animatedTexts: [
-                      WavyAnimatedText(
-                        'Welcome to',
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                        ),
-                        speed: const Duration(milliseconds: 70),
-                      ),
-                    ],
-                  ),
-                  AnimatedTextKit(
-                    animatedTexts: [
                       ColorizeAnimatedText(
                         'CatTalk',
                         textStyle: const TextStyle(
@@ -81,6 +68,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           Colors.black,
                           const Color.fromARGB(255, 68, 255, 196),
                         ],
+                      ),
+                    ],
+                  ),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      WavyAnimatedText(
+                        'Chat Beyond, Connect Within',
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        speed: const Duration(milliseconds: 70),
                       ),
                     ],
                   ),
