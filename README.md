@@ -2,8 +2,6 @@
     CatTalk: Chat Beyond, Connect Within
 </h2>
 
-<hr>
-
 <h1 align="center">
     <img src="icon.png"/>
 </h1>
@@ -17,8 +15,6 @@ CatTalk is a mobile application that is aims for establishing social connectivit
 <p align="center">
 CatTalk stands out as a versatile messaging and social media application with a rich set of features. In addition to standard messaging functionalities like sending, editing, and deleting messages, it supports voice and video calls using Agora API, user management, and media file uploads. With features such as push notifications, online status indicators, and a search function, CatTalk ensures a seamless user experience. The app also has a user-friendly UI and prioritizes security using Firebase API for user authentication, database management, and cloud messaging for push notifications, enhancing overall reliability and privacy.
 </p>
-
-<hr>
 
 # Operations
 
