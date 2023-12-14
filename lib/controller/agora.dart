@@ -8,7 +8,7 @@ class AgoraAPIProvider {
       appId: 'b7e7cf74098b4ef1afd95f138eaa90aa',
       channelName: 'Flutter-WeChat',
       tempToken:
-          '007eJxTYFhj7Hi9cPLHsmuT/16+avs4egNbndtj06qIhyKLTxxpdtZUYEgyTzVPTjM3MbC0SDJJTTNMTEuxNE0zNLZITUy0NEhMvPOpPLUhkJHhPscfJkYGCATx+RjcckpLSlKLdMNTnTMSSxgYAKvVJsA=',
+          '007eJxTYLhf/rnznlD+gXebGDh22ktK9ptJX2vWX7dk/pqA/rQplacUGJLMU82T08xNDCwtkkxS0wwT01IsTdMMjS1SExMtDRITmT2qUhsCGRmS1LhYGRkgEMTnY3DLKS0pSS3SDU91zkgsYWAAAK/JInQ=',
     ),
   );
 
