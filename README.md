@@ -93,3 +93,7 @@ The objective of this project is to develop a mobile application that is aims fo
     </div>
 </div>
 
+### **How to Use**
+- Install the apk 
+: https://github.com/Vustron/Flutter-CatTalk/releases/tag/V2.0.2
+- Then Run the app
