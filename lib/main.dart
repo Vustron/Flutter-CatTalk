@@ -29,7 +29,7 @@ void main() async {
   ]).then((value) {
     _initializeFirebase();
     runApp(const App());
-  });
+  });z
 }
 
 class App extends StatelessWidget {
