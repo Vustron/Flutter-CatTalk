@@ -3,7 +3,7 @@
 </h1>
 
 <div align="center">
-    <img src="icon.png"/>
+    <img src="icon.png" width=300 height=300/>
 </div>
 
 # Overview
@@ -92,6 +92,12 @@ The objective of this project is to develop a mobile application that is aims fo
         <img src="https://github.com/Vustron/Flutter-CatTalk/assets/121848978/b15306f2-c8f2-4a22-b5b5-cb2a31492159" width=500 height=700/>
     </div>
 </div>
+
+### **System Requirements**
+- Android 7+ or iOS
+- Storage of 200MB
+- Internet Connection
+- Google Account to Login
 
 ### **How to Use**
 - Install the apk 
