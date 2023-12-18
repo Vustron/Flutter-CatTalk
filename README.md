@@ -102,4 +102,20 @@ The objective of this project is to develop a mobile application that is aims fo
 ### **How to Use**
 - Install the apk 
 : https://github.com/Vustron/Flutter-CatTalk/releases/tag/V2.0.2
-- Then Run the app
+- Then run the application
+
+# **Contributors**
+### Programmer of the application:
+- <a href="https://github.com/Vustron">Michael Joshua Ruña</a>
+
+### For making the documentation of the application:
+- <a href="https://github.com/Vustron">Michael Joshua Ruña</a>
+
+### Testers of the application:
+- <a href="https://github.com/karlmacas29">Karl Macas</a>
+- <a href="https://www.facebook.com/ElyBoombilya">Mike Angel Manipon</a>
+- <a href="https://www.facebook.com/glennmark.gulay.5">Glenn Mark Gulay</a>
+- <a href="https://www.facebook.com/profile.php?id=100095560927692">Alexandra May Pis-ing</a>
+
+### For making the video presentation:
+- <a href="https://www.facebook.com/ElyBoombilya">Mike Angel Manipon</a>
