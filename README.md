@@ -94,7 +94,7 @@ The objective of this project is to develop a mobile application that is aims fo
 </div>
 
 ### **System Requirements**
-- Android 7+ or iOS
+- Android 8+ or iOS
 - Storage of 200MB
 - Internet Connection
 - Google Account to Login
